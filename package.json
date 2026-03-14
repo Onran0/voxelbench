@@ -1,0 +1,13 @@
+{
+  "name": "voxelbench",
+  "version": "1.0.0",
+  "description": "",
+  "main": "plugin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "devDependencies": {
+    "blockbench-types": "^5.0.6"
+  }
+}
