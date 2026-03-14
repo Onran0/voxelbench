@@ -2,12 +2,13 @@
   "name": "voxelbench",
   "version": "1.0.0",
   "description": "",
-  "main": "plugin.js",
+  "main": "src/plugin.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "esbuild src/plugin.js --bundle --outfile=dist/voxelbench.js"
   },
   "private": true,
   "devDependencies": {
-    "blockbench-types": "^5.0.6"
+    "blockbench-types": "^5.0.6",
+    "esbuild": "^0.27.4"
   }
 }
