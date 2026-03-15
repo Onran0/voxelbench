@@ -1,11 +1,12 @@
 import vcmExport from "./exporters/vcm.js"
 
+const version = "0.1.0"
 let exportAction
 
 Plugin.register('voxelbench', {
     title: 'VoxelBench',
     author: 'Onran',
-    version: '1.0.0',
+    version: version,
     variant: "both",
 
     onload() {
@@ -31,3 +32,5 @@ Plugin.register('voxelbench', {
         exportAction.delete()
     }
 });
+
+console.log(`voxelbench: successfully loaded! version: ${version}`)
