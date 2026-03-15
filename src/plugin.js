@@ -1,4 +1,4 @@
-import getVcm from "./exporter.js"
+import vcmExport from "./exporters/vcm.js"
 
 let exportAction
 
@@ -15,7 +15,7 @@ Plugin.register('voxelbench', {
             export_options: {},
 
             compile() {
-                return getVcm()
+                return vcmExport()
             }
         });
 
