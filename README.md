@@ -1,4 +1,4 @@
-# Voxel Bench
+# ![voxelbench](assets/icon_circle_128.png) Voxel Bench
 
 <sup>[Russian README](README-ru.md)</sup>
 

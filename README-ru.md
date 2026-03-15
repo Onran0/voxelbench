@@ -1,4 +1,4 @@
-# Voxel Bench
+# ![voxelbench](assets/icon_circle_128.png) Voxel Bench
 
 Это плагин для [**Blockbench**](https://www.blockbench.net),
 позволяющий экспортировать модели в формат `.vcm`
