@@ -14,9 +14,7 @@ Plugin.register('voxelbench', {
             extension: 'vcm',
             export_options: {},
 
-            compile() {
-                return vcmExport()
-            }
+            compile: vcmExport
         });
 
         MenuBar.addAction(exportAction = new Action('export_vcm', {

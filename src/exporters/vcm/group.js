@@ -4,7 +4,7 @@ import * as avec3 from "../../util/array_vec3.js"
 
 export const TargetType = Group
 
-export default function exportGroup(element, builder, parentOrigin, indent) {
+export default async function exportGroup(element, builder, parentOrigin, indent) {
     let relativeOrigin = avec3.sub(element.origin, parentOrigin)
 
     builder.push(`${indent}@bone name "${element.name}" `)
@@ -18,7 +18,7 @@ export default function exportGroup(element, builder, parentOrigin, indent) {
     builder.push(`{\n`)
 
     for(let child of element.children) {
-        exportElement(child, builder, relativeOrigin, indent + Indent)
+        await exportElement(child, builder, relativeOrigin, indent + Indent)
     }
 
     builder.push(`${indent}}\n`)
