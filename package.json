@@ -1,7 +1,7 @@
 {
   "name": "voxelbench",
   "version": "1.0.0",
-  "description": "",
+  "description": "blockbench plugin for export models to .vcm format (voxel core model)",
   "main": "src/plugin.js",
   "scripts": {
     "build": "esbuild src/plugin.js --bundle --outfile=dist/voxelbench.js"
