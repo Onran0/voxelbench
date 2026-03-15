@@ -76,7 +76,7 @@ function exportElement(element, builder, indent) {
 
         builder.push(`${indent}}\n`)
     } else if (element instanceof Group) {
-        builder.push(`${indent}@bone name "${element.name}" move (${element.origin.join(', ')}) `)
+        builder.push(`${indent}@bone name "${element.name}" `)
         builder.push(`rotate (${element.rotation.join(`, `)}) {\n`)
 
         for(let child of element.children) {
