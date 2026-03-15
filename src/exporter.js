@@ -86,8 +86,8 @@ function exportElement(element, builder, parentOrigin, indent) {
                 if(texture != null) {
                     builder.push(`texture "${texture.name.substring(0, texture.name.lastIndexOf('.'))}" `)
 
-                    width = texture.width
-                    height = texture.height
+                    width = texture.uv_width
+                    height = texture.uv_height
                 }
             }
 
