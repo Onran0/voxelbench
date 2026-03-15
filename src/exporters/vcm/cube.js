@@ -13,20 +13,17 @@ function fixCubeFaceUV(face, uv) {
     let [u1,v1,u2,v2] = uv
 
     switch(face) {
+        case "north":
+        case "south":
         case "east":
             return [u1,v2,u2,v1]
 
+        case "down":
         case "west":
             return [u2,v2,u1,v1]
 
         case "up":
             return [u2,v1,u1,v2]
-
-        case "down":
-            return [u2,v2,u1,v1]
-
-        case "north": case "south":
-            return [u1,v2,u2,v1]
 
         default:
             return uv
