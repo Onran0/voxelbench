@@ -6,6 +6,10 @@
 намного упрощая моделирование, риггинг и в целом интеграцию
 моделей в **Voxel Core**.
 
+![demo1](assets/demo1.png)
+
+![demo1](assets/demo2.gif)
+
 ## Как установить?
 1) Откройте страницу [релизов](https://github.com/Onran0/voxelbench/releases);
 2) Скачайте файл `voxelbench.js` с последнего релиза;

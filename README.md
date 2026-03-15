@@ -8,6 +8,10 @@ that allows you to export models to the `.vcm` format
 greatly simplifying modeling, rigging, and overall integrating
 models into **Voxel Core**.
 
+![demo1](assets/demo1.png)
+
+![demo1](assets/demo2.gif)
+
 ## How to install?
 1) Open the [releases](https://github.com/Onran0/voxelbench/releases) page;
 2) Download the `voxelbench.js` file from latest release;
