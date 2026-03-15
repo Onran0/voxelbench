@@ -1,7 +1,5 @@
 import * as avec3 from "../../util/array_vec3.js"
 
-export const TargetType = Cube
-
 const BBSideToVCM = {
     north: "south",
     south: "north",
@@ -35,7 +33,7 @@ function fixCubeFaceUV(face, uv) {
     }
 }
 
-export default function exportCube(element, builder, parentOrigin, indent) {
+export default function exportCube(element, builder, parentOrigin, indent, baseIndent) {
     builder.push(`${indent}@box from (${
         avec3.sub(element.from, parentOrigin).join(', ')
     }) to (${
@@ -55,7 +53,7 @@ export default function exportCube(element, builder, parentOrigin, indent) {
     for (let faceName in element.faces) {
         const face = element.faces[faceName]
 
-        builder.push(`${indent}${Indent}@part tags (${BBSideToVCM[faceName]}) `)
+        builder.push(`${indent}${baseIndent}@part tags (${BBSideToVCM[faceName]}) `)
 
         let width = 16, height = 16
 

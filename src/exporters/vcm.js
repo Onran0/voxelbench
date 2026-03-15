@@ -1,34 +1,21 @@
-const ElementsExportersPaths = [
-    "./cube.js",
-    "./group.js"
-]
+import exportCube from './vcm/cube.js'
+import exportGroup from './vcm/group.js'
 
 export const Indent = `    `
 
-let ElementsExporters = {}
-let ElementsExportersCompleted = false
+let ElementsExporters = { }
 
-async function completeElementsExporters() {
-    const modules = await Promise.all(
-        ElementsExportersPaths.map(path => import(path))
-    )
+ElementsExporters[Cube] = exportCube
+ElementsExporters[Group] = exportGroup
 
-    modules.forEach(module => ElementsExporters[module.TargetType] = module.default)
-
-    ElementsExportersCompleted = true
-}
-
-export async function exportElement(element, builder, parentOrigin, indent) {
-    if(!ElementsExportersCompleted)
-        await completeElementsExporters()
-
+export function exportElement(element, builder, parentOrigin, indent) {
     if(!element.export)
         return
 
     const elementExporter = ElementsExporters[element.constructor]
 
     if(elementExporter != null) {
-        await elementExporter(element, builder, parentOrigin, indent)
+        elementExporter(element, builder, parentOrigin, indent, Indent, exportElement)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
@@ -36,11 +23,11 @@ export async function exportElement(element, builder, parentOrigin, indent) {
     }
 }
 
-export default async function doExport() {
+export default function doExport() {
     let builder = [ ]
 
     for (const element of Outliner.root) {
-        await exportElement(element, builder, [0, 0, 0], Indent);
+        exportElement(element, builder, [0, 0, 0], '');
     }
 
     return builder.join('')
