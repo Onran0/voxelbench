@@ -33,7 +33,21 @@ function fixCubeFaceUV(face, uv) {
     }
 }
 
-function exportElement(element, builder, indent) {
+function vec3_sub(a, b) {
+    return [
+        a[0] - b[0],
+        a[1] - b[1],
+        a[2] - b[2]
+    ]
+}
+
+function vec3_is_zero(a) {
+    return a[0] === 0 &&
+           a[1] === 0 &&
+           a[2] === 0;
+}
+
+function exportElement(element, builder, parentOrigin, indent) {
     if(!element.export)
         return
 
@@ -43,8 +57,21 @@ function exportElement(element, builder, indent) {
         indent += Indent
 
     if(element instanceof Cube) {
-        builder.push(`${indent}@box from (${element.from.join(', ')}) to (${element.to.join(', ')}) `)
-        builder.push(`origin (${element.origin.join(', ')}) rotate (${element.rotation.join(', ')}) {\n`)
+        builder.push(`${indent}@box from (${
+            vec3_sub(element.from, parentOrigin).join(', ')
+        }) to (${
+            vec3_sub(element.to, parentOrigin).join(', ')
+        }) `)
+
+        let relativeOrigin = vec3_sub(element.origin, parentOrigin)
+
+        if(!vec3_is_zero(relativeOrigin))
+            builder.push(`origin (${relativeOrigin.join(', ')}) `)
+
+        if(!vec3_is_zero(element.rotation))
+            builder.push(`rotate (${element.rotation.join(', ')}) `)
+
+        builder.push(`{\n`)
 
         for (let faceName in element.faces) {
             const face = element.faces[faceName]
@@ -76,21 +103,30 @@ function exportElement(element, builder, indent) {
 
         builder.push(`${indent}}\n`)
     } else if (element instanceof Group) {
+        let relativeOrigin = vec3_sub(element.origin, parentOrigin)
+
         builder.push(`${indent}@bone name "${element.name}" `)
-        builder.push(`rotate (${element.rotation.join(`, `)}) {\n`)
+
+        if(!vec3_is_zero(relativeOrigin))
+            builder.push(`move (${relativeOrigin.join(`, `)}) `)
+
+        if(!vec3_is_zero(element.rotation))
+            builder.push(`rotate (${element.rotation.join(`, `)}) `)
+
+        builder.push(`{\n`)
 
         for(let child of element.children) {
-            exportElement(child, builder, indent)
+            exportElement(child, builder, relativeOrigin, indent)
         }
 
-        builder.push(`${indent}}`)
+        builder.push(`${indent}}\n`)
     }
 }
 
 export default function getVcm() {
     let builder = [ ]
 
-    Outliner.root.forEach(element => exportElement(element, builder))
+    Outliner.root.forEach(element => exportElement(element, builder, [ 0, 0, 0 ]))
 
     return builder.join('')
 }
