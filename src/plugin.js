@@ -26,7 +26,7 @@ Plugin.register('voxelbench', {
             click() {
                 VCMCodec.export();
             }
-        }), "file.export");
+        }), "file.export.0");
     },
 
     onunload() {
