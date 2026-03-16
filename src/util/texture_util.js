@@ -7,10 +7,7 @@ export function getTextureName(texture) {
 }
 
 export function normalizeUVByTexture(uv, texture) {
-    if(texture == null)
-        return normalizeUV(uv, 16, 16)
-    else
-        return normalizeUV(uv, texture.uv_width, texture.uv_height)
+    return normalizeUV(uv, texture?.uv_width || 16, texture?.uv_height || 16)
 }
 
 export function normalizeUV(uv, width, height) {
