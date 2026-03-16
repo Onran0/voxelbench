@@ -1,4 +1,5 @@
 import * as avec3 from "../../util/array_vec3.js"
+import * as texture_util from "../../util/texture_util.js"
 
 const BBSideToVCM = {
     north: "south",
@@ -52,25 +53,19 @@ export default function exportCube(element, builder, parentOrigin, indent, baseI
 
         builder.push(`${indent}${baseIndent}@part tags (${BBSideToVCM[faceName]}) `)
 
-        let width = 16, height = 16
+        let texture
 
         if(face.texture !== false) {
-            let texture = Texture.all.find(t => t.uuid === face.texture)
+            texture = texture_util.findTexture(face.texture)
 
-            if(texture != null) {
-                builder.push(`texture "${texture.name.substring(0, texture.name.lastIndexOf('.'))}" `)
-
-                width = texture.uv_width
-                height = texture.uv_height
-            }
+            if(texture != null)
+                builder.push(`texture "${texture_util.getTextureName(texture)}" `)
         }
 
-        let normalizedUv = [
-            face.uv[0] / width, 1 - face.uv[1] / height,
-            face.uv[2] / width, 1 - face.uv[3] / height
-        ]
-
-        normalizedUv = fixCubeFaceUV(faceName, normalizedUv)
+        let normalizedUv = fixCubeFaceUV(
+            faceName,
+            texture_util.normalizeUVByTexture(face.uv, texture)
+        )
 
         builder.push(`region (${normalizedUv.join(', ')})\n`)
     }
