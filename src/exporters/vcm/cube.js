@@ -31,14 +31,14 @@ function fixCubeFaceUV(face, uv) {
     }
 }
 
-export default function exportCube(element, builder, parentOrigin, indent, baseIndent) {
+export default function exportCube(element, builder, parentInfo, indent, baseIndent) {
     builder.push(`${indent}@box from (${
-        avec3.sub(element.from, parentOrigin).join(', ')
+        avec3.sub(element.from, parentInfo.origin).join(', ')
     }) to (${
-        avec3.sub(element.to, parentOrigin).join(', ')
+        avec3.sub(element.to, parentInfo.origin).join(', ')
     }) `)
 
-    let relativeOrigin = avec3.sub(element.origin, parentOrigin)
+    let relativeOrigin = avec3.sub(element.origin, parentInfo.origin)
 
     if(!avec3.is_zero(relativeOrigin))
         builder.push(`origin (${relativeOrigin.join(', ')}) `)
