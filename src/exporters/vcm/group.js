@@ -14,7 +14,7 @@ export default function exportGroup(element, builder, parentInfo, indent, baseIn
     builder.push(`{\n`)
 
     const asParent = {
-        origin: relativeOrigin,
+        origin: element.origin,
         rotation: element.rotation,
         parent: parentInfo
     }
