@@ -1,7 +1,7 @@
 import * as avec3 from "../../util/array_vec3.js"
 
 export default function exportGroup(element, builder, parentInfo, indent, baseIndent, exportElement) {
-    let relativeOrigin = avec3.sub(element.origin, parentInfo.origin)
+    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
 
     builder.push(`${indent}@bone name "${element.name}" `)
 
@@ -16,6 +16,7 @@ export default function exportGroup(element, builder, parentInfo, indent, baseIn
     const asParent = {
         origin: element.origin,
         rotation: element.rotation,
+        scale: parentInfo.scale,
         parent: parentInfo
     }
 

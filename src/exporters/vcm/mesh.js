@@ -25,19 +25,28 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
         const face = mesh.faces[faceKey]
 
         for(const triangle of getTriangles(mesh, face, faceKey)) {
-            const a = avec3.add(
-                avec3.rotate(mesh.vertices[triangle[0]], mesh.rotation),
-                relativeOrigin
+            const a = avec3.scale(
+                avec3.add(
+                    avec3.rotate(mesh.vertices[triangle[0]], mesh.rotation),
+                    relativeOrigin
+                ),
+                parentInfo.scale
             )
 
-            const b = avec3.add(
-                avec3.rotate(mesh.vertices[triangle[1]], mesh.rotation),
-                relativeOrigin
+            const b = avec3.scale(
+                avec3.add(
+                    avec3.rotate(mesh.vertices[triangle[1]], mesh.rotation),
+                    relativeOrigin
+                ),
+                parentInfo.scale
             )
 
-            const c = avec3.add(
-                avec3.rotate(mesh.vertices[triangle[2]], mesh.rotation),
-                relativeOrigin
+            const c = avec3.scale(
+                avec3.add(
+                    avec3.rotate(mesh.vertices[triangle[2]], mesh.rotation),
+                    relativeOrigin
+                ),
+                parentInfo.scale
             )
 
             let texture = texture_util.findTexture(face.texture)

@@ -33,12 +33,12 @@ function fixCubeFaceUV(face, uv) {
 
 export default function exportCube(element, builder, parentInfo, indent, baseIndent) {
     builder.push(`${indent}@box from (${
-        avec3.sub(element.from, parentInfo.origin).join(', ')
+        avec3.scale(avec3.sub(element.from, parentInfo.origin), parentInfo.scale).join(', ')
     }) to (${
-        avec3.sub(element.to, parentInfo.origin).join(', ')
+        avec3.scale(avec3.sub(element.to, parentInfo.origin), parentInfo.scale).join(', ')
     }) `)
 
-    let relativeOrigin = avec3.sub(element.origin, parentInfo.origin)
+    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
 
     if(!avec3.is_zero(relativeOrigin))
         builder.push(`origin (${relativeOrigin.join(', ')}) `)

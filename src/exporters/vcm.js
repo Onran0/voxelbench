@@ -30,8 +30,9 @@ export default function doExport() {
 
     for (const element of Outliner.root) {
         exportElement(element, builder, {
-            origin: [ 0, 0, 0],
+            origin: [ -0.5*16, 0, -0.5*16],
             rotation: [ 0, 0, 0 ],
+            scale: 1/16, // from pixels to meters
             parent: null
         }, '');
     }
