@@ -5,12 +5,12 @@ function getTriangles(mesh, face, faceKey) {
     const v = face.vertices
 
     switch(v.length) {
-        case 3: return [v]
+        case 3: return v
 
         case 4: return [
             [v[0], v[1], v[2]],
             [v[3], v[2], v[1]]
-        ];
+        ]
 
         default:
             console.error(`voxelbench: failed to export face "${faceKey}" on mesh "${mesh.name}" because it have unsupported vertices count (${v.length})`)
