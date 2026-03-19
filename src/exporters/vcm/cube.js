@@ -1,5 +1,6 @@
 import * as avec3 from "../../util/array_vec3.js"
 import * as texture_util from "../../util/texture_util.js"
+import { prettyJoin } from "../../util/floats_prettifier"
 
 const BBSideToVCM = {
     north: "south",
@@ -33,18 +34,18 @@ function fixCubeFaceUV(face, uv) {
 
 export default function exportCube(element, builder, parentInfo, indent, baseIndent) {
     builder.push(`${indent}@box from (${
-        avec3.scale(avec3.sub(element.from, parentInfo.origin), parentInfo.scale).join(', ')
+        prettyJoin(avec3.scale(avec3.sub(element.from, parentInfo.origin), parentInfo.scale), ', ')
     }) to (${
-        avec3.scale(avec3.sub(element.to, parentInfo.origin), parentInfo.scale).join(', ')
+        prettyJoin(avec3.scale(avec3.sub(element.to, parentInfo.origin), parentInfo.scale), ', ')
     }) `)
 
     let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
 
     if(!avec3.is_zero(relativeOrigin))
-        builder.push(`origin (${relativeOrigin.join(', ')}) `)
+        builder.push(`origin (${prettyJoin(relativeOrigin, ', ')}) `)
 
     if(!avec3.is_zero(element.rotation))
-        builder.push(`rotate (${element.rotation.join(', ')}) `)
+        builder.push(`rotate (${prettyJoin(element.rotation, ', ')}) `)
 
     builder.push(`{\n`)
 

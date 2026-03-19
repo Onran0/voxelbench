@@ -1,5 +1,6 @@
 import * as avec3 from "../../util/array_vec3.js"
 import * as texture_util from "../../util/texture_util.js"
+import { prettyJoin } from "../../util/floats_prettifier"
 
 function getTriangles(mesh, face, faceKey) {
     const v = face.vertices
@@ -58,7 +59,13 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
             ], texture)
 
             builder.push(
-                `${indent}@tri a (${a.join(', ')}) b (${b.join(', ')}) c (${c.join(', ')}) uv (${uv.join(', ')})`
+                `${indent}@tri a (${
+                    prettyJoin(a, ', ')
+                }) b (${
+                    prettyJoin(b, ', ')
+                }) c (${
+                    prettyJoin(c, ', ')
+                }) uv (${uv.join(', ')})`
             )
 
             if(texture != null)
