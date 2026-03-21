@@ -1,11 +1,15 @@
+import pluginIcon from '../assets/icon.png'
+
 import vcmExport from "./exporters/vcm.js"
 
 const version = "0.1.0"
-let exportAction
+
+let actions = [ ]
 
 Plugin.register('voxelbench', {
     title: 'VoxelBench',
     author: 'Onran',
+    icon: pluginIcon,
     version: version,
     variant: "both",
 
@@ -18,19 +22,23 @@ Plugin.register('voxelbench', {
             compile: vcmExport
         });
 
-        MenuBar.addAction(exportAction = new Action('export_vcm', {
+        const action = new Action('export_vcm', {
             name: 'Export VCM Model',
-            icon: `save`,
+            icon: `icon-format_block`,
             category: "file",
             click() {
-                VCMCodec.export();
+                VCMCodec.export()
             }
-        }), "file.export.0");
+        })
+
+        MenuBar.addAction(action, "file.export.0")
+
+        actions.push(action)
     },
 
     onunload() {
-        exportAction.delete()
+        actions.forEach(action => action.delete())
     }
-});
+})
 
 console.log(`voxelbench: successfully loaded! version: ${version}`)

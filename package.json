@@ -4,11 +4,12 @@
   "description": "blockbench plugin for export models to .vcm format (voxel core model)",
   "main": "src/plugin.js",
   "scripts": {
-    "build": "esbuild src/plugin.js --bundle --outfile=dist/voxelbench.js"
+    "build": "node scripts/build.js"
   },
   "private": true,
   "devDependencies": {
     "blockbench-types": "^5.0.6",
-    "esbuild": "^0.27.4"
+    "esbuild": "^0.27.4",
+    "archiver": "^6.0.0"
   }
 }
