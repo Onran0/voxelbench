@@ -2,7 +2,7 @@ import pluginIcon from '../assets/icon.png'
 
 import vcmExport from "./exporters/vcm.js"
 
-const version = "0.1.0"
+const version = "0.2.0"
 
 let actions = [ ]
 
