@@ -3,10 +3,10 @@
 <sup>[Russian README](README-ru.md)</sup>
 
 This is a plugin for [**Blockbench**](https://www.blockbench.net),
-that allows you to export models to the `.vcm` format
+allowing you to export models to the `.vcm` format
 ([Voxel Core](https://github.com/MihailRis/voxelcore) Model),
-greatly simplifying modeling, rigging, and overall integrating
-models into **Voxel Core**.
+greatly simplifying modeling, rigging, and overall integration
+of models into **Voxel Core**.
 
 ![demo1](assets/demo1.png)
 
@@ -14,20 +14,21 @@ models into **Voxel Core**.
 
 ## How to install?
 1) Open the [releases](https://github.com/Onran0/voxelbench/releases) page;
-2) Download the `voxelbench.js` file from latest release;
-3) In **Blockbench**, click `File -> Plugins -> Import from File`
-   and select the downloaded file.
+2) Download the `voxelbench.zip` file from the latest release;
+3) Unzip the archive to any folder;
+4) In Blockbench, click `File -> Plugins -> Load plugin from File`
+   and select `voxelbench.js` in the unzipped folder.
 
 ## How to use?
 
 Simply click `File -> Export -> Export VCM Model` and select the file
-to which you want to export the `.vcm` model.
+to which you want to export the .vcm model.
 
 ## How to build?
 
 ### WebStorm Guide
 
 1) Clone the repository through the interface;
-2) Open the **VoxelBench** project;
-3) Enter `npm run build` in the terminal;
-4) Use the plugin build located at `dist/voxelbench.js`.
+2) Open the VoxelBench project;
+3) Type `npm run build` in the terminal;
+4) Use the plugin build located at `dist/voxelbench/voxelbench.js` relative to the project root.
