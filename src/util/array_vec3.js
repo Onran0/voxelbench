@@ -72,6 +72,34 @@ export function scale(a, b) {
     }
 }
 
+export function euler_to_quat(euler, order = 'XYZ') {
+    let quat = new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(
+            Math.degToRad(euler[0]),
+            Math.degToRad(euler[1]),
+            Math.degToRad(euler[2]),
+            order
+        )
+    )
+
+    return [ quat.x, quat.y, quat.z, quat.w ]
+}
+
+export function convert_euler_order(euler, from, to) {
+    let quat = new THREE.Quaternion().setFromEuler(
+        new THREE.Euler(
+            Math.degToRad(euler[0]),
+            Math.degToRad(euler[1]),
+            Math.degToRad(euler[2]),
+            from
+        )
+    )
+
+    let converted = new THREE.Euler().setFromQuaternion(quat, to)
+
+    return [ Math.radToDeg(converted.x), Math.radToDeg(converted.y), Math.radToDeg(converted.z)]
+}
+
 export function rotate(v, degrees, origin = [0, 0, 0]) {
     const rad = [
         degrees[0] * (Math.PI / 180),

@@ -10,7 +10,7 @@ export default function exportGroup(element, builder, parentInfo, indent, baseIn
         builder.push(`move (${prettyJoin(relativeOrigin, `, `)}) `)
 
     if(!avec3.is_zero(element.rotation))
-        builder.push(`rotate (${prettyJoin(element.rotation, `, `)}) `)
+        builder.push(`rotate (${prettyJoin(avec3.euler_to_quat(element.rotation), `, `)}) `)
 
     builder.push(`{\n`)
 
