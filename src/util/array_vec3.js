@@ -72,38 +72,6 @@ export function scale(a, b) {
     }
 }
 
-export function euler_to_quat(euler, order = 'XYZ') {
-    let quat = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(
-            Math.degToRad(euler[0]),
-            Math.degToRad(euler[1]),
-            Math.degToRad(euler[2]),
-            order
-        )
-    )
-
-    return [ quat.x, quat.y, quat.z, quat.w ]
-}
-
-export function convert_euler_order(euler, from, to) {
-    let quat = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(
-            THREE.MathUtils.degToRad(euler[0]),
-            THREE.MathUtils.degToRad(euler[1]),
-            THREE.MathUtils.degToRad(euler[2]),
-            from
-        )
-    )
-
-    let converted = new THREE.Euler().setFromQuaternion(quat, to)
-
-    return [
-        THREE.MathUtils.radToDeg(converted.x),
-        THREE.MathUtils.radToDeg(converted.y),
-        THREE.MathUtils.radToDeg(converted.z)
-    ]
-}
-
 export function rotate_quat(v, q) {
     const vec = new THREE.Vector3(v[0], v[1], v[2])
     vec.applyQuaternion(q)
