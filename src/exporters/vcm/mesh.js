@@ -2,74 +2,82 @@ import * as avec3 from "../../util/array_vec3.js"
 import * as texture_util from "../../util/texture_util.js"
 import { prettyJoin } from "../../util/floats_prettifier"
 
-function getTriangles(mesh, face, faceKey) {
-    const v = face.vertices
-
-    switch(v.length) {
-        case 3: return [v]
-
-        case 4: return [
-            [v[0], v[1], v[2]],
-            [v[0], v[2], v[3]]
-        ]
-
-        default:
-            console.error(`voxelbench: failed to export face "${faceKey}" on mesh "${mesh.name}" because it have unsupported vertices count (${v.length})`)
-            return [ ]
-    }
-}
-
 export default function exportMesh(mesh, builder, parentInfo, indent) {
+    const geo = mesh.mesh.geometry
+
+    const pos = geo.attributes.position.array
+    const uvAttr = geo.attributes.uv?.array
+    const index = geo.index.array
+
+    const materials = []
+
+    for (let key in mesh.faces) {
+        let face = mesh.faces[key]
+
+        if (face.texture === null)
+            continue
+
+        let tex = face.getTexture()
+
+        if (tex && tex.uuid)
+            materials.push(tex.getMaterial())
+    }
+
     const relativeOrigin = avec3.sub(mesh.origin, parentInfo.origin)
 
-    for(const faceKey in mesh.faces) {
-        const face = mesh.faces[faceKey]
+    function getVertex(idx) {
+        let v = [
+            pos[idx*3],
+            pos[idx*3+1],
+            pos[idx*3+2]
+        ]
 
-        for(const triangle of getTriangles(mesh, face, faceKey)) {
-            const a = avec3.scale(
-                avec3.add(
-                    avec3.rotate(mesh.vertices[triangle[0]], mesh.rotation),
-                    relativeOrigin
-                ),
-                parentInfo.scale
-            )
+        v = avec3.rotate(v, mesh.rotation)
+        v = avec3.add(v, relativeOrigin)
+        v = avec3.scale(v, parentInfo.scale)
 
-            const b = avec3.scale(
-                avec3.add(
-                    avec3.rotate(mesh.vertices[triangle[1]], mesh.rotation),
-                    relativeOrigin
-                ),
-                parentInfo.scale
-            )
+        return v
+    }
 
-            const c = avec3.scale(
-                avec3.add(
-                    avec3.rotate(mesh.vertices[triangle[2]], mesh.rotation),
-                    relativeOrigin
-                ),
-                parentInfo.scale
-            )
+    const groups = geo.groups.length
+        ? geo.groups
+        : [{ start: 0, count: geo.index.count, materialIndex: 0 }];
 
-            let texture = texture_util.findTexture(face.texture)
+    for (const group of groups) {
+        let texture = materials[group.materialIndex]
 
-            const uv = texture_util.normalizeUVByTexture([
-                ...face.uv[triangle[0]],
-                ...face.uv[triangle[1]],
-                ...face.uv[triangle[2]]
-            ], texture)
+        for (let i = group.start; i < group.start + group.count; i += 3) {
+            const ia = index[i]
+            const ib = index[i+1]
+            const ic = index[i+2]
+
+            const a = getVertex(ia)
+            const b = getVertex(ib)
+            const c = getVertex(ic)
+
+            let uv = null
+
+            if (uvAttr) {
+                uv = [
+                    uvAttr[ia*2], uvAttr[ia*2+1],
+                    uvAttr[ib*2], uvAttr[ib*2+1],
+                    uvAttr[ic*2], uvAttr[ic*2+1],
+                ]
+            }
 
             builder.push(
-                `${indent}@tri a (${
-                    prettyJoin(a, ', ')
-                }) b (${
-                    prettyJoin(b, ', ')
-                }) c (${
-                    prettyJoin(c, ', ')
-                }) uv (${uv.join(', ')})`
+                `${indent}@tri a (${prettyJoin(a, ', ')}) b (${prettyJoin(b, ', ')}) c (${prettyJoin(c, ', ')})`
             )
 
-            if(texture != null)
-                builder.push(` texture "${ texture_util.getTextureName(texture) }"`)
+            if (uv)
+                builder.push(` uv (${uv.join(', ')})`)
+
+            if (texture) {
+                texture = texture_util.getTextureName(texture)
+
+                if(texture.trim() !== '')
+                    builder.push(` texture "${texture}"`)
+            }
 
             builder.push(`\n`)
         }
