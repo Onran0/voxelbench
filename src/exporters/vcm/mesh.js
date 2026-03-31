@@ -41,7 +41,7 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
 
     const groups = geo.groups.length
         ? geo.groups
-        : [{ start: 0, count: geo.index.count, materialIndex: 0 }];
+        : [{ start: 0, count: geo.index.count, materialIndex: 0 }]
 
     for (const group of groups) {
         let texture = materials[group.materialIndex]
