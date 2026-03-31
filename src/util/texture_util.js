@@ -3,7 +3,10 @@ export function findTexture(uuid) {
 }
 
 export function getTextureName(texture) {
-    return texture.name.substring(0, texture.name.lastIndexOf('.'))
+    if(texture.name.includes('.'))
+        return texture.name.substring(0, texture.name.lastIndexOf('.'))
+    else
+        return texture.name
 }
 
 export function normalizeUVByTexture(uv, texture) {
