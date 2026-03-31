@@ -59,8 +59,12 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
         if(face.texture !== false) {
             texture = texture_util.findTexture(face.texture)
 
-            if(texture != null)
-                builder.push(`texture "${texture_util.getTextureName(texture)}" `)
+            if (texture) {
+                texture = texture_util.getTextureName(texture)
+
+                if(texture.trim() !== '')
+                    builder.push(` texture "${texture}"`)
+            }
         }
 
         let normalizedUv = fixCubeFaceUV(
