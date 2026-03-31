@@ -44,8 +44,10 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
     if(!avec3.is_zero(relativeOrigin))
         builder.push(`origin (${prettyJoin(relativeOrigin, ', ')}) `)
 
+    const q = element.mesh.quaternion
+
     if(!avec3.is_zero(element.rotation))
-        builder.push(`rotate (${prettyJoin(avec3.euler_to_quat(element.rotation), `, `)}) `)
+        builder.push(`rotate (${prettyJoin([ q.x, q.y, q.z, q.w ], ', ')}) `)
 
     builder.push(`{\n`)
 
@@ -60,10 +62,10 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
             texture = texture_util.findTexture(face.texture)
 
             if (texture) {
-                texture = texture_util.getTextureName(texture)
+                const textureName = texture_util.getTextureName(texture)
 
-                if(texture.trim() !== '')
-                    builder.push(` texture "${texture}"`)
+                if(textureName.trim() !== '')
+                    builder.push(` texture "${textureName}"`)
             }
         }
 

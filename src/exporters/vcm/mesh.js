@@ -32,7 +32,7 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
             pos[idx*3+2]
         ]
 
-        v = avec3.rotate(v, mesh.rotation)
+        v = avec3.rotate_quat(v, mesh.mesh.quaternion)
         v = avec3.add(v, relativeOrigin)
         v = avec3.scale(v, parentInfo.scale)
 

@@ -9,8 +9,10 @@ export default function exportGroup(element, builder, parentInfo, indent, baseIn
     if(!avec3.is_zero(relativeOrigin))
         builder.push(`move (${prettyJoin(relativeOrigin, `, `)}) `)
 
+    const q = element.mesh.quaternion
+
     if(!avec3.is_zero(element.rotation))
-        builder.push(`rotate (${prettyJoin(avec3.euler_to_quat(element.rotation), `, `)}) `)
+        builder.push(`rotate (${prettyJoin([ q.x, q.y, q.z, q.w ], ', ')}) `)
 
     builder.push(`{\n`)
 

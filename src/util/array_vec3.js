@@ -88,16 +88,26 @@ export function euler_to_quat(euler, order = 'XYZ') {
 export function convert_euler_order(euler, from, to) {
     let quat = new THREE.Quaternion().setFromEuler(
         new THREE.Euler(
-            Math.degToRad(euler[0]),
-            Math.degToRad(euler[1]),
-            Math.degToRad(euler[2]),
+            THREE.MathUtils.degToRad(euler[0]),
+            THREE.MathUtils.degToRad(euler[1]),
+            THREE.MathUtils.degToRad(euler[2]),
             from
         )
     )
 
     let converted = new THREE.Euler().setFromQuaternion(quat, to)
 
-    return [ Math.radToDeg(converted.x), Math.radToDeg(converted.y), Math.radToDeg(converted.z)]
+    return [
+        THREE.MathUtils.radToDeg(converted.x),
+        THREE.MathUtils.radToDeg(converted.y),
+        THREE.MathUtils.radToDeg(converted.z)
+    ]
+}
+
+export function rotate_quat(v, q) {
+    const vec = new THREE.Vector3(v[0], v[1], v[2])
+    vec.applyQuaternion(q)
+    return [vec.x, vec.y, vec.z]
 }
 
 export function rotate(v, degrees, origin = [0, 0, 0]) {
