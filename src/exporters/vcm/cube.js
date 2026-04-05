@@ -41,7 +41,7 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
 
     let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
 
-    if(!avec3.is_zero(relativeOrigin))
+    if(!avec3.is_zero(relativeOrigin) || parentInfo.parent != null)
         builder.push(`origin (${prettyJoin(relativeOrigin, ', ')}) `)
 
     const q = element.mesh.quaternion
@@ -65,7 +65,7 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
                 const textureName = texture_util.getTextureName(texture)
 
                 if(textureName.trim() !== '')
-                    builder.push(` texture "${textureName}"`)
+                    builder.push(`texture "${textureName}" `)
             }
         }
 
