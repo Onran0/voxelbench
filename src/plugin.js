@@ -1,8 +1,53 @@
+const version = '0.3.0'
+
+import registerTranslations from './translations.js'
+registerTranslations()
+
 import pluginIcon from '../assets/icon.png'
 
-import vcmExport from "./exporters/vcm.js"
+import exportVcm from './exporters/vcm.js'
 
-const version = "0.3.0"
+function registerFormat(
+    name,
+    extension, exportOptions, compileFunction,
+    exportButtonId, exportButtonLabel,
+    exportButtonIcon = 'icon-format_block', exportButtonCategory = 'file'
+) {
+    const codec = new Codec('vcm', {
+        name: name,
+        extension: extension,
+        export_options: exportOptions,
+
+        compile: compileFunction,
+
+        async export() {
+            let options = await codec.promptExportOptions()
+            if (options === null) return
+
+            let content = codec.compile(options)
+
+            Blockbench.export({
+                resource_id: extension,
+                type: name,
+                extensions: [extension],
+                name: codec.fileName(),
+                startpath: codec.startPath(),
+                content: content
+            })
+        }
+    })
+
+    const action = new Action(exportButtonId, {
+        name: exportButtonLabel,
+        icon: exportButtonIcon,
+        category: exportButtonCategory,
+        click: codec.export
+    })
+
+    MenuBar.addAction(action, "file.export.0")
+
+    actions.push(action)
+}
 
 let actions = [ ]
 
@@ -11,29 +56,25 @@ Plugin.register('voxelbench', {
     author: 'Onran',
     icon: pluginIcon,
     version: version,
-    variant: "both",
+    variant: 'both',
 
     onload() {
-        const VCMCodec = new Codec('vcm', {
-            name: 'VCM',
-            extension: 'vcm',
-            export_options: {},
-
-            compile: vcmExport
-        });
-
-        const action = new Action('export_vcm', {
-            name: 'Export VCM Model',
-            icon: `icon-format_block`,
-            category: "file",
-            click() {
-                VCMCodec.export()
-            }
-        })
-
-        MenuBar.addAction(action, "file.export.0")
-
-        actions.push(action)
+        registerFormat(
+            'Voxel Core Model', 'vcm',
+            {
+                texturesPrefix: {
+                    type: 'text',
+                    label: 'vcm.export.textures_prefix',
+                    value: ''
+                },
+                centerForEntity: {
+                    type: 'checkbox',
+                    label: 'vcm.export.center_for_entity',
+                    value: false
+                }
+            }, exportVcm,
+            'export_vcm', 'vcm.export'
+        )
     },
 
     onunload() {

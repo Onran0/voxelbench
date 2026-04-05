@@ -10,14 +10,14 @@ ElementsExporters[Cube] = exportCube
 ElementsExporters[Group] = exportGroup
 ElementsExporters[Mesh] = exportMesh
 
-export function exportElement(element, builder, parentInfo, indent) {
+export function exportElement(element, builder, parentInfo, indent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return
 
     const elementExporter = ElementsExporters[element.constructor]
 
     if(elementExporter != null) {
-        elementExporter(element, builder, parentInfo, indent, Indent, exportElement)
+        elementExporter(element, builder, parentInfo, indent, options, Indent, exportElement)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
@@ -25,16 +25,23 @@ export function exportElement(element, builder, parentInfo, indent) {
     }
 }
 
-export default function doExport() {
+export default function doExport(options) {
+    let initialOrigin = [ -0.5*16, 0, -0.5*16 ] // offset for center model on blocks
+
+    if(options.centerForEntity)
+        initialOrigin = [ 0, 0.5*16, 0 ] // offset for center model on entities
+
     let builder = [ ]
 
     for (const element of Outliner.root) {
         exportElement(element, builder, {
-            origin: [ 0, 0.5*16, 0 ],
+            origin: initialOrigin,
             rotation: [ 0, 0, 0 ],
-            scale: 1/16, // from pixels to meters
             parent: null
-        }, '');
+        }, '', {
+            scale: 1/16, // from blockbench pixels to meters,
+            texturesPrefix: options.texturesPrefix
+        })
     }
 
     return builder.join('')
