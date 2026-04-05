@@ -32,14 +32,14 @@ function fixCubeFaceUV(face, uv) {
     }
 }
 
-export default function exportCube(element, builder, parentInfo, indent, baseIndent) {
+export default function exportCube(element, builder, parentInfo, indent, options, baseIndent) {
     builder.push(`${indent}@box from (${
-        prettyJoin(avec3.scale(avec3.sub(element.from, parentInfo.origin), parentInfo.scale), ', ')
+        prettyJoin(avec3.scale(avec3.sub(element.from, parentInfo.origin), options.scale), ', ')
     }) to (${
-        prettyJoin(avec3.scale(avec3.sub(element.to, parentInfo.origin), parentInfo.scale), ', ')
+        prettyJoin(avec3.scale(avec3.sub(element.to, parentInfo.origin), options.scale), ', ')
     }) `)
 
-    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
+    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), options.scale)
 
     if(!avec3.is_zero(relativeOrigin) || parentInfo.parent != null)
         builder.push(`origin (${prettyJoin(relativeOrigin, ', ')}) `)
@@ -65,7 +65,7 @@ export default function exportCube(element, builder, parentInfo, indent, baseInd
                 const textureName = texture_util.getTextureName(texture)
 
                 if(textureName.trim() !== '')
-                    builder.push(`texture "${textureName}" `)
+                    builder.push(`texture "${options.texturesPrefix + textureName}" `)
             }
         }
 

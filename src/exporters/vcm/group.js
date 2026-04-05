@@ -1,8 +1,8 @@
 import * as avec3 from "../../util/array_vec3.js"
 import { prettyJoin } from "../../util/floats_prettifier"
 
-export default function exportGroup(element, builder, parentInfo, indent, baseIndent, exportElement) {
-    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), parentInfo.scale)
+export default function exportGroup(element, builder, parentInfo, indent, options, baseIndent, exportElement) {
+    let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), options.scale)
 
     builder.push(`${indent}@bone name "${element.name}" `)
 
@@ -19,12 +19,11 @@ export default function exportGroup(element, builder, parentInfo, indent, baseIn
     const asParent = {
         origin: element.origin,
         rotation: element.rotation,
-        scale: parentInfo.scale,
         parent: parentInfo
     }
 
     for(let child of element.children) {
-        exportElement(child, builder, asParent, indent + baseIndent)
+        exportElement(child, builder, asParent, indent + baseIndent, options)
     }
 
     builder.push(`${indent}}\n`)

@@ -2,7 +2,7 @@ import * as avec3 from "../../util/array_vec3.js"
 import * as texture_util from "../../util/texture_util.js"
 import { prettyJoin } from "../../util/floats_prettifier"
 
-export default function exportMesh(mesh, builder, parentInfo, indent) {
+export default function exportMesh(mesh, builder, parentInfo, indent, options) {
     const geo = mesh.mesh.geometry
 
     const pos = geo.attributes.position.array
@@ -34,7 +34,7 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
 
         v = avec3.rotate_quat(v, mesh.mesh.quaternion)
         v = avec3.add(v, relativeOrigin)
-        v = avec3.scale(v, parentInfo.scale)
+        v = avec3.scale(v, options.scale)
 
         return v
     }
@@ -73,10 +73,10 @@ export default function exportMesh(mesh, builder, parentInfo, indent) {
                 builder.push(` uv (${uv.join(', ')})`)
 
             if (texture) {
-                texture = texture_util.getTextureName(texture)
+                const textureName = texture_util.getTextureName(texture)
 
-                if(texture.trim() !== '')
-                    builder.push(` texture "${texture}"`)
+                if(textureName.trim() !== '')
+                    builder.push(` texture "${options.texturesPrefix + textureName}"`)
             }
 
             builder.push(`\n`)
