@@ -11,7 +11,7 @@ ElementsExporters[Group] = exportGroup
 ElementsExporters[Mesh] = exportMesh
 
 export function exportElement(element, builder, parentInfo, indent) {
-    if(!element.export)
+    if(!element.export || (element.visibility != null && !element.visibility))
         return
 
     const elementExporter = ElementsExporters[element.constructor]
