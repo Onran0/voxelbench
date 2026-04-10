@@ -26,6 +26,10 @@ export default class DataBuffer {
         this.#view = new DataView(this.#buffer)
     }
 
+    getBytesCountInUtf(str) {
+        return textEncoder.encode(str).byteLength
+    }
+
     putInt8(val) {
         this.#ensureCapacity(1)
         this.#view.setInt8(this.#offset, val)
@@ -87,9 +91,11 @@ export default class DataBuffer {
     }
 
     putBytes(arr) {
-        this.#ensureCapacity(arr.length)
-        new Uint8Array(this.#buffer, this.#offset, arr.length).set(arr)
-        this.#offset += arr.length
+        const len = arr.length || arr.byteLength
+
+        this.#ensureCapacity(len)
+        new Uint8Array(this.#buffer, this.#offset, len).set(arr)
+        this.#offset += len
     }
 
     putUtf(str) {
