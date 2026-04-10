@@ -1,13 +1,17 @@
 const Translations = {
     en: {
-        "vcm.export.center_for_entity": "Center for entity",
-        "vcm.export.textures_prefix": "Texture name prefix",
-        "vcm.export": "Export VCM Model"
+        "voxelbench.export.center_for_entity": "Center for entity",
+        "voxelbench.export.textures_prefix": "Texture name prefix",
+        "voxelbench.export.vec3.export_normals": "Export normals",
+        "voxelbench.vcm.export": "Export VCM Model",
+        "voxelbench.vec3.export": "Export VEC3 Model"
     },
     ru: {
-        "vcm.export.center_for_entity": "Центрировать для сущности",
-        "vcm.export.textures_prefix": "Префикс названиям текстур",
-        "vcm.export": "Экспорт VCM-модели"
+        "voxelbench.export.center_for_entity": "Центрировать для сущности",
+        "voxelbench.export.textures_prefix": "Префикс названиям текстур",
+        "voxelbench.export.vec3.export_normals": "Экспортировать нормали",
+        "voxelbench.vcm.export": "Экспорт VCM-модели",
+        "voxelbench.vec3.export": "Экспорт VEC3-модели"
     }
 }
 

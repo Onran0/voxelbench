@@ -6,6 +6,7 @@ registerTranslations()
 import pluginIcon from '../assets/icon.png'
 
 import exportVcm from './exporters/vcm.js'
+import exportVec3 from './exporters/vec3.js'
 
 function registerFormat(
     name,
@@ -13,7 +14,7 @@ function registerFormat(
     exportButtonId, exportButtonLabel,
     exportButtonIcon = 'icon-format_block', exportButtonCategory = 'file'
 ) {
-    const codec = new Codec('vcm', {
+    const codec = new Codec(extension, {
         name: name,
         extension: extension,
         export_options: exportOptions,
@@ -59,21 +60,36 @@ Plugin.register('voxelbench', {
     variant: 'both',
 
     onload() {
+        const baseOptions = {
+            texturesPrefix: {
+                type: 'text',
+                label: 'voxelbench.export.textures_prefix',
+                value: ''
+            },
+            centerForEntity: {
+                type: 'checkbox',
+                label: 'voxelbench.export.center_for_entity',
+                value: false
+            }
+        }
+
         registerFormat(
-            'Voxel Core Model', 'vcm',
-            {
-                texturesPrefix: {
-                    type: 'text',
-                    label: 'vcm.export.textures_prefix',
-                    value: ''
-                },
-                centerForEntity: {
-                    type: 'checkbox',
-                    label: 'vcm.export.center_for_entity',
-                    value: false
+            'VEC3 (Voxel Core)', 'vec3',
+            Object.assign(structuredClone(baseOptions), {
+                    exportNormals: {
+                        type: 'checkbox',
+                        label: 'voxelbench.export.vec3.export_normals',
+                        value: true
+                    }
                 }
-            }, exportVcm,
-            'export_vcm', 'vcm.export'
+            ), exportVec3,
+            'export_vec3', 'voxelbench.vec3.export'
+        )
+
+        registerFormat(
+            'VCM (Voxel Core)', 'vcm',
+            baseOptions, exportVcm,
+            'export_vcm', 'voxelbench.vcm.export'
         )
     },
 
