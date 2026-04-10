@@ -1,14 +1,14 @@
 import DataBuffer from '../util/data_buffer'
 
-import getCubeParts from './vec3/cube.js'
-import getGroupParts from './vec3/group.js'
-import getMeshParts from './vec3/mesh.js'
+// import getCubeParts from './vec3/cube.js'
+// import getGroupParts from './vec3/group.js'
+// import getMeshParts from './vec3/mesh.js'
 
 let PartsSuppliers = { }
 
-PartsSuppliers[Cube] = getCubeParts
-PartsSuppliers[Group] = getGroupParts
-PartsSuppliers[Mesh] = getMeshParts
+// PartsSuppliers[Cube] = getCubeParts
+// PartsSuppliers[Group] = getGroupParts
+// PartsSuppliers[Mesh] = getMeshParts
 
 /*
 part must be an object with following fields:
@@ -56,7 +56,7 @@ function exportMeshes(options) {
                     meshesMap[part.texture] = {
                         coords: part.coords,
                         uvs: part.uvs,
-                        normals: part.normals
+                        normals: options.exportNormals ? part.normals : undefined
                     }
                 } else {
                     const map = meshesMap[part.texture]
@@ -71,7 +71,7 @@ function exportMeshes(options) {
     }
 
     for(const textureName in meshesMap) {
-        textureNames.push(textureNames)
+        textureNames.push(textureName)
 
         const { coords, uvs, normals } = meshesMap[textureName]
 
