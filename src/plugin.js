@@ -1,12 +1,14 @@
 const version = '0.3.0'
 
-import registerTranslations from './translations.js'
-registerTranslations()
-
 import pluginIcon from '../assets/plugin/icon.png'
 
 import exportVcm from './exporters/vcm.js'
 import exportVec3 from './exporters/vec3.js'
+
+import translations from '../assets/plugin/translations.json'
+
+for(let lang in translations)
+    Language.addTranslations(lang, translations[lang])
 
 function registerFormat(
     name,
