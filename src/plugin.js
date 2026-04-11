@@ -3,7 +3,7 @@ const version = '0.3.0'
 import registerTranslations from './translations.js'
 registerTranslations()
 
-import pluginIcon from '../assets/icon.png'
+import pluginIcon from '../assets/plugin/icon.png'
 
 import exportVcm from './exporters/vcm.js'
 import exportVec3 from './exporters/vec3.js'

@@ -1,4 +1,4 @@
-# ![voxelbench](assets/icon_circle_128.png) Voxel Bench
+# ![voxelbench](assets/docs/icon_circle_128.png) Voxel Bench
 
 <sup>[Russian README](README-ru.md)</sup>
 
@@ -8,9 +8,9 @@ allowing you to export models to the `.vcm` format
 greatly simplifying modeling, rigging, and overall integration
 of models into **Voxel Core**.
 
-![demo1](assets/demo1.png)
+![demo1](assets/docs/demo1.png)
 
-![demo1](assets/demo2.gif)
+![demo1](assets/docs/demo2.gif)
 
 ## How to install?
 1) Open the [releases](https://github.com/Onran0/voxelbench/releases) page;

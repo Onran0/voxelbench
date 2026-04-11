@@ -1,4 +1,4 @@
-# ![voxelbench](assets/icon_circle_128.png) Voxel Bench
+# ![voxelbench](assets/docs/icon_circle_128.png) Voxel Bench
 
 Это плагин для [**Blockbench**](https://www.blockbench.net),
 позволяющий экспортировать модели в формат `.vcm`
@@ -6,9 +6,9 @@
 намного упрощая моделирование, риггинг и в целом интеграцию
 моделей в **Voxel Core**.
 
-![demo1](assets/demo1.png)
+![demo1](assets/docs/demo1.png)
 
-![demo1](assets/demo2.gif)
+![demo1](assets/docs/demo2.gif)
 
 ## Как установить?
 1) Откройте страницу [релизов](https://github.com/Onran0/voxelbench/releases);
