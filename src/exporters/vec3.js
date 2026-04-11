@@ -148,7 +148,7 @@ export default function doExport(options) {
 
     // materials
     for(let textureName of textureNames) {
-        textureName = options.texturesPrefix + textureName
+        textureName = textureName.length !== 0 ? options.texturesPrefix + textureName : ''
 
         buffer.putUint16(0) // flags
         buffer.putUint16(buffer.getBytesCountInUtf(textureName))
