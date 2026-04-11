@@ -29,7 +29,7 @@ const ATTR_NORMAL = 2
 
 function getElementSubmeshes(element, parent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
-        return [ ]
+        return { }
 
     const elementSubmeshesBuilder = submeshBuilders[element.constructor]
 
@@ -39,7 +39,7 @@ function getElementSubmeshes(element, parent, options) {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
         )
-        return [ ]
+        return { }
     }
 }
 
@@ -122,11 +122,6 @@ function exportMeshes(options) {
 }
 
 export default function doExport(options) {
-    let initialOrigin = [ -0.5*16, 0, -0.5*16 ] // offset for center model on blocks
-
-    if(options.centerForEntity)
-        initialOrigin = [ 0, 0.5*16, 0 ] // offset for center model on entities
-
     let buffer = new DataBuffer()
 
     /* header */
@@ -161,10 +156,13 @@ export default function doExport(options) {
 
     buffer.putUint16(buffer.getBytesCountInUtf(modelName))
 
+    // offset for center model for blocks or entities
+    let origin = options.centerForEntity ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+
     // origin
-    buffer.putFloat32(initialOrigin[0])
-    buffer.putFloat32(initialOrigin[1])
-    buffer.putFloat32(initialOrigin[2])
+    buffer.putFloat32(origin[0])
+    buffer.putFloat32(origin[1])
+    buffer.putFloat32(origin[2])
 
     buffer.putUint32(meshBuffers.length)
 
