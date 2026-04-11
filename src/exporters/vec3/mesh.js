@@ -45,7 +45,7 @@ export function applyTransforms(parent, vertices, normals, baseOrigin, baseRotat
     }
 }
 
-export function getThreeMeshParts(mesh, parent, options) {
+export function getThreeMeshSubmeshes(mesh, parent, options) {
     const geo = mesh.geometry
 
     const posAttr = geo.attributes.position.array
@@ -63,7 +63,7 @@ export function getThreeMeshParts(mesh, parent, options) {
 
     let materials = Array.isArray(mesh.material) ? mesh.material : [ mesh.material ]
 
-    let parts = { }
+    let submeshes = { }
 
     function getAttrVec2(attr, idx) {
         return [
@@ -107,26 +107,26 @@ export function getThreeMeshParts(mesh, parent, options) {
 
         applyTransforms(parent, coords, normals, mesh.origin, mesh.mesh.quaternion)
 
-        if(parts[texture] == null) {
-            parts[texture] = {
+        if(submeshes[texture] == null) {
+            submeshes[texture] = {
                 coords: coords,
                 uvs: uvs,
                 normals: normals
             }
         } else {
-            const part = parts[texture]
+            const submeshes = submeshes[texture]
 
-            part.coords.push(...coords)
-            part.uvs.push(...uvs)
+            submeshes.coords.push(...coords)
+            submeshes.uvs.push(...uvs)
 
             if(options.exportNormals)
-                part.normals.push(...normals)
+                submeshes.normals.push(...normals)
         }
     }
 
-    return parts
+    return submeshes
 }
 
-export default function getMeshParts(mesh, parent, options) {
-    return getThreeMeshParts(mesh.mesh, parent, options)
+export default function getMeshSubmeshes(mesh, parent, options) {
+    return getThreeMeshSubmeshes(mesh.mesh, parent, options)
 }

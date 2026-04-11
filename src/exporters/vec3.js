@@ -1,14 +1,14 @@
 import DataBuffer from '../util/data_buffer'
 
-import getCubeParts from './vec3/cube.js'
-import getGroupParts from './vec3/group.js'
-import getMeshParts from './vec3/mesh.js'
+import getCubeSubmeshes from './vec3/cube.js'
+import getGroupSubmeshes from './vec3/group.js'
+import getMeshSubmeshes from './vec3/mesh.js'
 
-let partsSuppliers = { }
+let submeshBuilders = { }
 
-partsSuppliers[Cube] = getCubeParts
-partsSuppliers[Group] = getGroupParts
-partsSuppliers[Mesh] = getMeshParts
+submeshBuilders[Cube] = getCubeSubmeshes
+submeshBuilders[Group] = getGroupSubmeshes
+submeshBuilders[Mesh] = getMeshSubmeshes
 
 /*
 all keys in returned maps must be texture names;
@@ -27,14 +27,14 @@ const ATTR_POSITION = 0
 const ATTR_UV = 1
 const ATTR_NORMAL = 2
 
-function getElementParts(element, parent, options) {
+function getElementSubmeshes(element, parent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return [ ]
 
-    const elementPartsSupplier = partsSuppliers[element.constructor]
+    const elementSubmeshesBuilder = submeshBuilders[element.constructor]
 
-    if(elementPartsSupplier != null) {
-        return elementPartsSupplier(element, parent, options, getElementParts)
+    if(elementSubmeshesBuilder != null) {
+        return elementSubmeshesBuilder(element, parent, options, getElementSubmeshes)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
@@ -50,24 +50,24 @@ function exportMeshes(options) {
     let meshesMap = { }
 
     for (const element of Outliner.root) {
-        const parts = getElementParts(element, null, options)
+        const submeshes = getElementSubmeshes(element, null, options)
 
-        for(const texture in parts) {
-            const part = parts[texture]
+        for(const texture in submeshes) {
+            const submesh = submeshes[texture]
 
             if(meshesMap[texture] == null) {
                 meshesMap[texture] = {
-                    coords: part.coords,
-                    uvs: part.uvs,
-                    normals: options.exportNormals ? part.normals : undefined
+                    coords: submesh.coords,
+                    uvs: submesh.uvs,
+                    normals: options.exportNormals ? submesh.normals : undefined
                 }
             } else {
                 const map = meshesMap[texture]
 
-                map.coords.push(...part.coords)
-                map.uvs.push(...part.uvs)
+                map.coords.push(...submesh.coords)
+                map.uvs.push(...submesh.uvs)
                 if(map.normals != null)
-                    map.normals.push(...part.normals)
+                    map.normals.push(...submesh.normals)
             }
         }
     }

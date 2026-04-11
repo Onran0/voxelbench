@@ -1,35 +1,35 @@
-export default function getGroupParts(group, parent, options, getElementParts) {
+export default function getGroupSubmeshes(group, parent, options, getElementSubmeshes) {
     const myNode = {
         parent: parent,
         origin: group.origin,
         rotation: group.mesh.quaternion
     }
 
-    let parts =  { }
+    let submeshes =  { }
 
     for(let child of group.children) {
-        const elementParts = getElementParts(child, myNode, options, getElementParts)
+        const elementSubmeshes = getElementSubmeshes(child, myNode, options, getElementSubmeshes)
 
-        for(let texture in elementParts) {
-            const part = elementParts[texture]
+        for(let texture in elementSubmeshes) {
+            const submesh = elementSubmeshes[texture]
 
-            if(parts[texture] == null) {
-                parts[texture] = {
-                    coords: part.coords,
-                    uvs: part.uvs,
-                    normals: part.normals
+            if(submeshes[texture] == null) {
+                submeshes[texture] = {
+                    coords: submesh.coords,
+                    uvs: submesh.uvs,
+                    normals: submesh.normals
                 }
             } else {
-                const map = parts[texture]
+                const map = submeshes[texture]
 
-                map.coords.push(...part.coords)
-                map.uvs.push(...part.uvs)
+                map.coords.push(...submesh.coords)
+                map.uvs.push(...submesh.uvs)
 
                 if(options.exportNormals)
-                    map.normals.push(...part.normals)
+                    map.normals.push(...submesh.normals)
             }
         }
     }
 
-    return parts
+    return submeshes
 }

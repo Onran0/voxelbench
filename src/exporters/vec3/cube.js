@@ -1,5 +1,5 @@
-import { getThreeMeshParts } from "./mesh";
+import { getThreeMeshSubmeshes } from "./mesh";
 
-export default function getCubeParts(cube, parent, options) {
-    return getThreeMeshParts(cube.mesh, parent, options)
+export default function getCubeSubmeshes(cube, parent, options) {
+    return getThreeMeshSubmeshes(cube.mesh, parent, options)
 }
