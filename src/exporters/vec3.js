@@ -1,18 +1,18 @@
 import DataBuffer from '../util/data_buffer'
 
-// import getCubeParts from './vec3/cube.js'
-// import getGroupParts from './vec3/group.js'
-// import getMeshParts from './vec3/mesh.js'
+import getCubeParts from './vec3/cube.js'
+import getGroupParts from './vec3/group.js'
+import getMeshParts from './vec3/mesh.js'
 
 let partsSuppliers = { }
 
-// partsSuppliers[Cube] = getCubeParts
-// partsSuppliers[Group] = getGroupParts
-// partsSuppliers[Mesh] = getMeshParts
+partsSuppliers[Cube] = getCubeParts
+partsSuppliers[Group] = getGroupParts
+partsSuppliers[Mesh] = getMeshParts
 
 /*
-part must be an object with following fields:
-    string texture
+all keys in returned maps must be texture names;
+all values must be an object with following fields:
     [ x: number, y: number, z: number ] coords[],
     [ u: number, v: number] uvs[],
     <can be undefined if options.exportNormals == false> [ x: number, y: number, z: number ] normals[]
@@ -50,22 +50,24 @@ function exportMeshes(options) {
     let meshesMap = { }
 
     for (const element of Outliner.root) {
-        for(const part of getElementParts(element, null, options)) {
-            if(part.texture != null) {
-                if(meshesMap[part.texture] == null) {
-                    meshesMap[part.texture] = {
-                        coords: part.coords,
-                        uvs: part.uvs,
-                        normals: options.exportNormals ? part.normals : undefined
-                    }
-                } else {
-                    const map = meshesMap[part.texture]
+        const parts = getElementParts(element, null, options)
 
-                    map.coords.push(...part.coords)
-                    map.uvs.push(...part.uvs)
-                    if(map.normals != null)
-                        map.normals.push(...part.normals)
+        for(const texture in parts) {
+            const part = parts[texture]
+
+            if(meshesMap[texture] == null) {
+                meshesMap[texture] = {
+                    coords: part.coords,
+                    uvs: part.uvs,
+                    normals: options.exportNormals ? part.normals : undefined
                 }
+            } else {
+                const map = meshesMap[texture]
+
+                map.coords.push(...part.coords)
+                map.uvs.push(...part.uvs)
+                if(map.normals != null)
+                    map.normals.push(...part.normals)
             }
         }
     }
@@ -145,7 +147,9 @@ export default function doExport(options) {
     buffer.putUint16(1) // models count
 
     // materials
-    for(const textureName of textureNames) {
+    for(let textureName of textureNames) {
+        textureName = options.texturesPrefix + textureName
+
         buffer.putUint16(0) // flags
         buffer.putUint16(buffer.getBytesCountInUtf(textureName))
         buffer.putUtf(textureName)
