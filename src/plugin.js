@@ -68,11 +68,14 @@ Plugin.register('voxelbench', {
                 label: 'voxelbench.export.textures_prefix',
                 value: ''
             },
-            centerForEntity: {
-                type: 'checkbox',
-                label: 'voxelbench.export.center_for_entity',
-                value: false
-            }
+            centering: {
+                type: 'select',
+                label: 'voxelbench.export.centering_method',
+                options: {
+                    entity: 'voxelbench.export.centering_method.entity',
+                    block: 'voxelbench.export.centering_method.block'
+                }
+            },
         }
 
         registerFormat(

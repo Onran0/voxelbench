@@ -28,7 +28,7 @@ export function exportElement(element, builder, parentInfo, indent, options) {
 export default function doExport(options) {
     let initialOrigin = [ -0.5*16, 0, -0.5*16 ] // offset for center model on blocks
 
-    if(options.centerForEntity)
+    if(options.centering === 'entity')
         initialOrigin = [ 0, 0.5*16, 0 ] // offset for center model on entities
 
     let builder = [ ]

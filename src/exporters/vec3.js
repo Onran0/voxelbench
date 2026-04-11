@@ -157,7 +157,7 @@ export default function doExport(options) {
     buffer.putUint16(buffer.getBytesCountInUtf(modelName))
 
     // offset for center model for blocks or entities
-    let origin = options.centerForEntity ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+    let origin = options.centering === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
 
     // origin
     buffer.putFloat32(origin[0])

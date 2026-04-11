@@ -1,6 +1,8 @@
 {
   "en": {
-    "voxelbench.export.center_for_entity": "Center for entity",
+    "voxelbench.export.centering_method": "Centering method",
+    "voxelbench.export.centering_method.entity": "For entity",
+    "voxelbench.export.centering_method.block": "For block",
     "voxelbench.export.textures_prefix": "Texture name prefix",
     "voxelbench.export.vec3.export_normals": "Export normals",
     "voxelbench.export.vec3.model_name": "Model name",
@@ -8,7 +10,9 @@
     "voxelbench.vec3.export": "Export VEC3 Model"
   },
   "ru": {
-    "voxelbench.export.center_for_entity": "Центрировать для сущности",
+    "voxelbench.export.centering_method": "Метод центрирования",
+    "voxelbench.export.centering_method.entity": "Для сущности",
+    "voxelbench.export.centering_method.block": "Для блока",
     "voxelbench.export.textures_prefix": "Префикс названиям текстур",
     "voxelbench.export.vec3.export_normals": "Экспортировать нормали",
     "voxelbench.export.vec3.model_name": "Имя модели",
