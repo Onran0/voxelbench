@@ -1,4 +1,4 @@
-import DataBuffer from '../util/data_buffer'
+import DataBuffer from '../util/DataBuffer'
 
 import getCubeSubmeshes from './vec3/cube.js'
 import getGroupSubmeshes from './vec3/group.js'
