@@ -45,7 +45,7 @@ export function applyTransforms(parent, vertices, normals, baseOrigin, baseRotat
     }
 }
 
-export function getThreeMeshSubmeshes(mesh, parent, options) {
+export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
     const geo = mesh.geometry
 
     const posAttr = geo.attributes.position.array
@@ -81,7 +81,8 @@ export function getThreeMeshSubmeshes(mesh, parent, options) {
     }
 
     for (const group of groups) {
-        let texture = texture_util.getTextureName(materials[group.materialIndex]) || ''
+        const material = materials[group.materialIndex]
+        let texture = material != null ? texture_util.getTextureName(material) || '' : ''
 
         let coords = [ ], uvs = [ ], normals = options.exportNormals ? [ ] : undefined
 
@@ -105,7 +106,7 @@ export function getThreeMeshSubmeshes(mesh, parent, options) {
             }
         }
 
-        applyTransforms(parent, coords, normals, mesh.origin, mesh.mesh.quaternion)
+        applyTransforms(parent, coords, normals, origin, mesh.quaternion)
 
         if(submeshes[texture] == null) {
             submeshes[texture] = {
@@ -114,13 +115,13 @@ export function getThreeMeshSubmeshes(mesh, parent, options) {
                 normals: normals
             }
         } else {
-            const submeshes = submeshes[texture]
+            const submesh = submeshes[texture]
 
-            submeshes.coords.push(...coords)
-            submeshes.uvs.push(...uvs)
+            submesh.coords.push(...coords)
+            submesh.uvs.push(...uvs)
 
             if(options.exportNormals)
-                submeshes.normals.push(...normals)
+                submesh.normals.push(...normals)
         }
     }
 
@@ -128,5 +129,5 @@ export function getThreeMeshSubmeshes(mesh, parent, options) {
 }
 
 export default function getMeshSubmeshes(mesh, parent, options) {
-    return getThreeMeshSubmeshes(mesh.mesh, parent, options)
+    return getThreeMeshSubmeshes(mesh.mesh, mesh.origin, parent, options)
 }

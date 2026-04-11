@@ -157,7 +157,7 @@ export default function doExport(options) {
 
     // models
 
-    const modelName = 'root'
+    const modelName = options.modelName
 
     buffer.putUint16(buffer.getBytesCountInUtf(modelName))
 
@@ -170,7 +170,7 @@ export default function doExport(options) {
 
     // meshes
     for(const meshBuffer of meshBuffers)
-        buffer.putBytes(meshBuffer.getArrayBuffer())
+        buffer.putBuffer(meshBuffer)
 
     buffer.putUtf(modelName)
 

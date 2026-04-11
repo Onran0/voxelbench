@@ -91,11 +91,27 @@ export default class DataBuffer {
     }
 
     putBytes(arr) {
-        const len = arr.length || arr.byteLength
+        const len = arr.length
 
         this.#ensureCapacity(len)
         new Uint8Array(this.#buffer, this.#offset, len).set(arr)
         this.#offset += len
+    }
+
+    putBuffer(buffer) {
+        const bytes = new Uint8Array(
+            buffer instanceof DataBuffer ? buffer.getArrayBuffer() : buffer
+        )
+
+        this.#ensureCapacity(bytes.length)
+
+        new Uint8Array(
+            this.#buffer,
+            this.#offset,
+            bytes.length
+        ).set(bytes)
+
+        this.#offset += bytes.length
     }
 
     putUtf(str) {
