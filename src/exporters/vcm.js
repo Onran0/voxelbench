@@ -2,22 +2,22 @@ import exportCube from './vcm/cube.js'
 import exportGroup from './vcm/group.js'
 import exportMesh from './vcm/mesh.js'
 
-export const Indent = `    `
+export const INDENT = `    `
 
-let ElementsExporters = { }
+let elementsExporters = { }
 
-ElementsExporters[Cube] = exportCube
-ElementsExporters[Group] = exportGroup
-ElementsExporters[Mesh] = exportMesh
+elementsExporters[Cube] = exportCube
+elementsExporters[Group] = exportGroup
+elementsExporters[Mesh] = exportMesh
 
 export function exportElement(element, builder, parentInfo, indent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return
 
-    const elementExporter = ElementsExporters[element.constructor]
+    const elementExporter = elementsExporters[element.constructor]
 
     if(elementExporter != null) {
-        elementExporter(element, builder, parentInfo, indent, options, Indent, exportElement)
+        elementExporter(element, builder, parentInfo, indent, options, INDENT, exportElement)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`

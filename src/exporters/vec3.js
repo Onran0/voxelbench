@@ -4,11 +4,11 @@ import DataBuffer from '../util/data_buffer'
 // import getGroupParts from './vec3/group.js'
 // import getMeshParts from './vec3/mesh.js'
 
-let PartsSuppliers = { }
+let partsSuppliers = { }
 
-// PartsSuppliers[Cube] = getCubeParts
-// PartsSuppliers[Group] = getGroupParts
-// PartsSuppliers[Mesh] = getMeshParts
+// partsSuppliers[Cube] = getCubeParts
+// partsSuppliers[Group] = getGroupParts
+// partsSuppliers[Mesh] = getMeshParts
 
 /*
 part must be an object with following fields:
@@ -18,8 +18,8 @@ part must be an object with following fields:
     <can be undefined if options.exportNormals == false> [ x: number, y: number, z: number ] normals[]
  */
 
-const Magic = '\0\0VEC3\0\0'
-const Version = 1
+const MAGIC = '\0\0VEC3\0\0'
+const VERSION = 1
 
 const U16_INDICES = 0b10
 
@@ -31,7 +31,7 @@ function getElementParts(element, parent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return [ ]
 
-    const elementPartsSupplier = PartsSuppliers[element.constructor]
+    const elementPartsSupplier = partsSuppliers[element.constructor]
 
     if(elementPartsSupplier != null) {
         return elementPartsSupplier(element, parent, options, getElementParts)
@@ -129,8 +129,8 @@ export default function doExport(options) {
 
     /* header */
 
-    buffer.putUtf(Magic)
-    buffer.putUint16(Version)
+    buffer.putUtf(MAGIC)
+    buffer.putUint16(VERSION)
     buffer.putUint16(0) // reserved
 
     const [meshBuffers, textureNames] = exportMeshes({

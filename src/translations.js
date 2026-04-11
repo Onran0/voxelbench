@@ -1,4 +1,4 @@
-const Translations = {
+const TRANSLATIONS = {
     en: {
         "voxelbench.export.center_for_entity": "Center for entity",
         "voxelbench.export.textures_prefix": "Texture name prefix",
@@ -16,6 +16,6 @@ const Translations = {
 }
 
 export default function() {
-    for(let lang in Translations)
-        Language.addTranslations(lang, Translations[lang])
+    for(let lang in TRANSLATIONS)
+        Language.addTranslations(lang, TRANSLATIONS[lang])
 }
