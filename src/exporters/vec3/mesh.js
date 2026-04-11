@@ -2,41 +2,39 @@ import * as avec3 from "../../util/array_vec3.js"
 import * as texture_util from "../../util/texture_util";
 
 function accumulateTransform(node) {
-    let position = [ 0, 0, 0 ]
+    let position = new THREE.Vector3()
     let rotation = new THREE.Quaternion()
 
     while (node) {
-        position = avec3.sub(position, node.origin)
+        position.applyQuaternion(node.rotation)
 
-        position = avec3.rotate_quat(position, node.rotation)
+        rotation.premultiply(node.rotation)
 
-        position = avec3.add(position, node.origin)
-
-        position = avec3.add(position, node.origin)
-
-        rotation = node.rotation.clone().multiply(rotation)
+        position.x += node.origin[0]
+        position.y += node.origin[1]
+        position.z += node.origin[2]
 
         node = node.parent
     }
 
-    return { position, rotation }
+    return [ [ position.x, position.y, position.z ], rotation ]
 }
 
-export function applyTransforms(parent, vertices, normals, baseOrigin, baseRotation) {
+export function applyTransforms(parent, vertices, normals, baseOrigin, baseRotation, scale) {
     if(parent == null && baseOrigin == null && baseRotation == null)
         return
 
-    const { position, rotation } = accumulateTransform({
+    const [ position, rotation ] = accumulateTransform({
         origin: baseOrigin,
         rotation: baseRotation,
         parent: parent
     })
 
     for (let i = 0; i < vertices.length; i++) {
-        vertices[i] = avec3.add(
+        vertices[i] = avec3.scale(avec3.add(
             avec3.rotate_quat(vertices[i], rotation),
             position
-        )
+        ), scale)
     }
 
     if(normals) {
@@ -106,7 +104,7 @@ export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
             }
         }
 
-        applyTransforms(parent, coords, normals, origin, mesh.quaternion)
+        applyTransforms(parent, coords, normals, origin, mesh.quaternion, options.scale)
 
         if(submeshes[texture] == null) {
             submeshes[texture] = {
@@ -129,5 +127,10 @@ export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
 }
 
 export default function getMeshSubmeshes(mesh, parent, options) {
-    return getThreeMeshSubmeshes(mesh.mesh, mesh.origin, parent, options)
+    return getThreeMeshSubmeshes(
+        mesh.mesh,
+        parent != null ? avec3.sub(mesh.origin, parent.origin) : mesh.origin,
+        parent,
+        options
+    )
 }

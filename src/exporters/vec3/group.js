@@ -1,7 +1,9 @@
+import * as avec3 from "../../util/array_vec3";
+
 export default function getGroupSubmeshes(group, parent, options, getElementSubmeshes) {
     const myNode = {
         parent: parent,
-        origin: group.origin,
+        origin: parent != null ? avec3.sub(group.origin, parent.origin) : group.origin,
         rotation: group.mesh.quaternion
     }
 
