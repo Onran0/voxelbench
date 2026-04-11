@@ -1,21 +1,6 @@
-const TRANSLATIONS = {
-    en: {
-        "voxelbench.export.center_for_entity": "Center for entity",
-        "voxelbench.export.textures_prefix": "Texture name prefix",
-        "voxelbench.export.vec3.export_normals": "Export normals",
-        "voxelbench.vcm.export": "Export VCM Model",
-        "voxelbench.vec3.export": "Export VEC3 Model"
-    },
-    ru: {
-        "voxelbench.export.center_for_entity": "Центрировать для сущности",
-        "voxelbench.export.textures_prefix": "Префикс названиям текстур",
-        "voxelbench.export.vec3.export_normals": "Экспортировать нормали",
-        "voxelbench.vcm.export": "Экспорт VCM-модели",
-        "voxelbench.vec3.export": "Экспорт VEC3-модели"
-    }
-}
+import translations from '../assets/plugin/translations.json'
 
 export default function() {
-    for(let lang in TRANSLATIONS)
-        Language.addTranslations(lang, TRANSLATIONS[lang])
+    for(let lang in translations)
+        Language.addTranslations(lang, translations[lang])
 }
