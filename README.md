@@ -3,14 +3,13 @@
 <sup>[Russian README](README-ru.md)</sup>
 
 This is a plugin for [**Blockbench**](https://www.blockbench.net),
-allowing you to export models to the `.vcm` format
-([Voxel Core](https://github.com/MihailRis/voxelcore) Model),
+allowing you to export models to the `.vcm` and `.vec3` formats,
 greatly simplifying modeling, rigging, and overall integration
-of models into **Voxel Core**.
+of models into **[Voxel Core](https://github.com/MihailRis/voxelcore)**.
 
 ![demo1](assets/docs/demo1.png)
 
-![demo1](assets/docs/demo2.gif)
+![demo2](assets/docs/demo2.gif)
 
 ## How to install?
 1) Open the [releases](https://github.com/Onran0/voxelbench/releases) page;
@@ -21,8 +20,8 @@ of models into **Voxel Core**.
 
 ## How to use?
 
-Simply click `File -> Export -> Export VCM Model` and select the file
-to which you want to export the .vcm model.
+Simply click `File -> Export -> Export VCM/VEC3 Model` and select the file
+to which you want to export the model.
 
 ## How to build?
 

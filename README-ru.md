@@ -1,14 +1,13 @@
 # ![voxelbench](assets/docs/icon_circle_128.png) Voxel Bench
 
 Это плагин для [**Blockbench**](https://www.blockbench.net),
-позволяющий экспортировать модели в формат `.vcm`
-([Voxel Core](https://github.com/MihailRis/voxelcore) Model),
+позволяющий экспортировать модели в форматы `.vcm` и `.vec3`,
 намного упрощая моделирование, риггинг и в целом интеграцию
-моделей в **Voxel Core**.
+моделей в **[Voxel Core](https://github.com/MihailRis/voxelcore)**.
 
 ![demo1](assets/docs/demo1.png)
 
-![demo1](assets/docs/demo2.gif)
+![demo2](assets/docs/demo2.gif)
 
 ## Как установить?
 1) Откройте страницу [релизов](https://github.com/Onran0/voxelbench/releases);
@@ -19,8 +18,8 @@
 
 ## Как использовать?
 
-Просто нажмите `File -> Export -> Export VCM Model` и выберите файл,
-в который вы хотите экспортировать `.vcm` модель.
+Просто нажмите `File -> Export -> Export VCM/VEC3 Model` и выберите файл,
+в который вы хотите экспортировать модель.
 
 ## Как сбилдить?
 
