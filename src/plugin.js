@@ -86,7 +86,7 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VEC3 (Voxel Core)', 'vec3',
-            Object.assign({
+            Object.assign(structuredClone(baseOptions),{
                     modelName: {
                         type: 'text',
                         label: 'voxelbench.export.vec3.model_name',
@@ -97,20 +97,20 @@ Plugin.register('voxelbench', {
                         label: 'voxelbench.export.vec3.export_normals',
                         value: true
                     }
-                }, baseOptions
+                }
             ), exportVec3,
             'export_vec3', 'voxelbench.vec3.export'
         )
 
         registerFormat(
             'VCM (Voxel Core)', 'vcm',
-            Object.assign({
+            Object.assign(structuredClone(baseOptions), {
                     applyBonesRotation: {
                         type: 'checkbox',
                         label: 'voxelbench.export.apply_bones_rotation',
                         value: true
                     }
-                }, baseOptions
+                }
             ), exportVcm,
             'export_vcm', 'voxelbench.vcm.export'
         )
