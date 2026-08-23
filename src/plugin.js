@@ -27,7 +27,13 @@ function registerFormat(
             let options = await codec.promptExportOptions()
             if (options === null) return
 
+            const oldTimelineTime = Timeline.time
+
+            Timeline.setTime(0)
+
             let content = codec.compile(options)
+
+            Timeline.setTime(oldTimelineTime)
 
             Blockbench.export({
                 resource_id: extension,
