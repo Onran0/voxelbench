@@ -6,8 +6,12 @@
     "voxelbench.export.apply_bones_rotation": "Apply bones rotation",
     "voxelbench.export.textures_prefix": "Texture name prefix",
     "voxelbench.export.vec3.export_normals": "Export normals",
+    "voxelbench.export.vca.target_animation": "Target animation",
+    "voxelbench.export.vca.unable_to_export": "Unable to export VCA",
+    "voxelbench.export.vca.unable_to_export.reason": "Project must have at least one animation",
     "voxelbench.vcm.export": "Export VCM Model",
-    "voxelbench.vec3.export": "Export VEC3 Model"
+    "voxelbench.vec3.export": "Export VEC3 Model",
+    "voxelbench.vca.export": "Export VCA Animation (Preview)"
   },
   "ru": {
     "voxelbench.export.target_usage": "Целевое использование",
@@ -16,7 +20,11 @@
     "voxelbench.export.apply_bones_rotation": "Применить вращение костей",
     "voxelbench.export.textures_prefix": "Префикс названиям текстур",
     "voxelbench.export.vec3.export_normals": "Экспортировать нормали",
+    "voxelbench.export.vca.target_animation": "Целевая анимация",
+    "voxelbench.export.vca.unable_to_export": "Невозможно экспортировать VCA",
+    "voxelbench.export.vca.unable_to_export.reason": "Проект должен иметь как минимум одну анимацию",
     "voxelbench.vcm.export": "Экспорт VCM-модели",
-    "voxelbench.vec3.export": "Экспорт VEC3-модели"
+    "voxelbench.vec3.export": "Экспорт VEC3-модели",
+    "voxelbench.vca.export": "Экспорт VCA-анимации (Экспериментально)"
   }
 }

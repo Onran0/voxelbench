@@ -7,6 +7,7 @@ import pluginIcon from '../assets/plugin/icon.png'
 
 import exportVcm from './exporters/vcm.js'
 import exportVec3 from './exporters/vec3.js'
+import exportVca from './exporters/vca.js'
 
 import translations from '../assets/plugin/translations.json'
 
@@ -16,7 +17,7 @@ for(let lang in translations)
 function registerFormat(
     name,
     extension, exportOptions, compileFunction,
-    exportButtonId, exportButtonLabel,
+    exportButtonId, exportButtonLabel, preExportCallback = null,
     exportButtonIcon = 'icon-format_block', exportButtonCategory = 'file'
 ) {
     const codec = new Codec(extension, {
@@ -71,7 +72,11 @@ function registerFormat(
         name: exportButtonLabel,
         icon: exportButtonIcon,
         category: exportButtonCategory,
-        click: codec.export
+        click: () => {
+            if(preExportCallback == null || !preExportCallback()) {
+                codec.export()
+            }
+        }
     })
 
     MenuBar.addAction(action, "file.export.0")
@@ -119,7 +124,35 @@ Plugin.register('voxelbench', {
         )
 
         registerFormat(
-            'VCM (Voxel Core)', 'vcm',
+            'VCA (Voxel Core Animation)', 'vca',
+            () => {
+                return {
+                    targetAnimation: {
+                        type: 'select',
+                        label: 'voxelbench.export.vca.target_animation',
+                        options: Object.fromEntries(
+                            Animator.animations.map(animation => [
+                                animation.uuid,
+                                animation.name
+                            ])
+                        )
+                    }
+                }
+            }, exportVca,
+            'export_vca', 'voxelbench.vca.export',
+            () => {
+                if(Animator.animations.length === 0) {
+                    Blockbench.showMessageBox({
+                        title: 'voxelbench.export.vca.unable_to_export',
+                        message: 'voxelbench.export.vca.unable_to_export.reason'
+                    })
+                    return true
+                } else return false
+            }
+        )
+
+        registerFormat(
+            'VCM (Voxel Core Model)', 'vcm',
             Object.assign(structuredClone(modelBaseOptions), {
                     applyBonesRotation: {
                         type: 'checkbox',
