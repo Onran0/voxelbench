@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import DataBuffer from '../util/DataBuffer'
-import { getFileStem } from "./util/path"
+import { getFileStem } from "../util/path"
 
 import getCubeSubmeshes from './vec3/cube.js'
 import getGroupSubmeshes from './vec3/group.js'
