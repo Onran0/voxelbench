@@ -68,12 +68,12 @@ Plugin.register('voxelbench', {
                 label: 'voxelbench.export.textures_prefix',
                 value: ''
             },
-            centering: {
+            targetUsage: {
                 type: 'select',
-                label: 'voxelbench.export.centering_method',
+                label: 'voxelbench.export.target_usage',
                 options: {
-                    entity: 'voxelbench.export.centering_method.entity',
-                    block: 'voxelbench.export.centering_method.block'
+                    entity: 'voxelbench.export.target_usage.entity',
+                    block: 'voxelbench.export.target_usage.block'
                 }
             },
         }

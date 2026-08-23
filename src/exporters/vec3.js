@@ -124,6 +124,8 @@ function exportMeshes(options) {
 export default function doExport(options) {
     let buffer = new DataBuffer()
 
+    const texturesPrefix = (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
+
     /* header */
 
     buffer.putUtf(MAGIC)
@@ -132,7 +134,7 @@ export default function doExport(options) {
 
     const [meshBuffers, textureNames] = exportMeshes({
         scale: 1/16, // from blockbench pixels to meters,
-        texturesPrefix: options.texturesPrefix,
+        texturesPrefix: texturesPrefix,
         exportNormals: options.exportNormals
     })
 
@@ -143,7 +145,7 @@ export default function doExport(options) {
 
     // materials
     for(let textureName of textureNames) {
-        textureName = textureName.length !== 0 ? options.texturesPrefix + textureName : ''
+        textureName = textureName.length !== 0 ? texturesPrefix + textureName : ''
 
         buffer.putUint16(0) // flags
         buffer.putUint16(buffer.getBytesCountInUtf(textureName))
@@ -157,7 +159,7 @@ export default function doExport(options) {
     buffer.putUint16(buffer.getBytesCountInUtf(modelName))
 
     // offset for center model for blocks or entities
-    let origin = options.centering === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+    let origin = options.targetUsage === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
 
     // origin
     buffer.putFloat32(origin[0])

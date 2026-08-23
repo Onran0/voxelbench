@@ -28,7 +28,7 @@ export function exportElement(element, builder, parentInfo, indent, options) {
 export default function doExport(options) {
     let initialOrigin = [ -0.5*16, 0, -0.5*16 ] // offset for center model on blocks
 
-    if(options.centering === 'entity')
+    if(options.targetUsage === 'entity')
         initialOrigin = [ 0, 0.5*16, 0 ] // offset for center model on entities
 
     let builder = [ ]
@@ -40,7 +40,7 @@ export default function doExport(options) {
             parent: null
         }, '', {
             scale: 1/16, // from blockbench pixels to meters,
-            texturesPrefix: options.texturesPrefix
+            texturesPrefix: (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
         })
     }
 
