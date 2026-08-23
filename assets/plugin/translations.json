@@ -6,7 +6,6 @@
     "voxelbench.export.apply_bones_rotation": "Apply bones rotation",
     "voxelbench.export.textures_prefix": "Texture name prefix",
     "voxelbench.export.vec3.export_normals": "Export normals",
-    "voxelbench.export.vec3.model_name": "Model name",
     "voxelbench.vcm.export": "Export VCM Model",
     "voxelbench.vec3.export": "Export VEC3 Model"
   },
@@ -17,7 +16,6 @@
     "voxelbench.export.apply_bones_rotation": "Применить вращение костей",
     "voxelbench.export.textures_prefix": "Префикс названиям текстур",
     "voxelbench.export.vec3.export_normals": "Экспортировать нормали",
-    "voxelbench.export.vec3.model_name": "Имя модели",
     "voxelbench.vcm.export": "Экспорт VCM-модели",
     "voxelbench.vec3.export": "Экспорт VEC3-модели"
   }

@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Onran
 // SPDX-License-Identifier: GPL-3.0-only
 
-const version = '0.4.0'
+const version = '0.5.0'
 
 import pluginIcon from '../assets/plugin/icon.png'
 
@@ -22,21 +22,17 @@ function registerFormat(
     const codec = new Codec(extension, {
         name: name,
         extension: extension,
-        export_options: exportOptions,
+        export_options: typeof exportOptions === 'object' ? exportOptions : { },
 
         compile: compileFunction,
 
         async export() {
+            if(typeof exportOptions === 'function') {
+                codec.export_options = exportOptions()
+            }
+
             let options = await codec.promptExportOptions()
             if (options === null) return
-
-            const oldTimelineTime = Timeline.time
-
-            Timeline.setTime(0)
-
-            let content = codec.compile(options)
-
-            Timeline.setTime(oldTimelineTime)
 
             Blockbench.export({
                 resource_id: extension,
@@ -44,7 +40,29 @@ function registerFormat(
                 extensions: [extension],
                 name: codec.fileName(),
                 startpath: codec.startPath(),
-                content: content
+                content: '',
+
+                custom_writer(_, path) {
+                    const oldTimelineTime = Timeline.time
+
+                    let content
+
+                    try {
+                        Timeline.setTime(0)
+
+                        content = codec.compile(Object.assign(
+                            {
+                                filePath: path
+                            }, options
+                        ))
+                    } finally {
+                        Timeline.setTime(oldTimelineTime)
+                    }
+
+                    Blockbench.writeFile(path, {
+                        content: content
+                    })
+                }
             })
         }
     })
@@ -71,7 +89,7 @@ Plugin.register('voxelbench', {
     variant: 'both',
 
     onload() {
-        const baseOptions = {
+        const modelBaseOptions = {
             texturesPrefix: {
                 type: 'text',
                 label: 'voxelbench.export.textures_prefix',
@@ -89,12 +107,7 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VEC3 (Voxel Core)', 'vec3',
-            Object.assign(structuredClone(baseOptions),{
-                    modelName: {
-                        type: 'text',
-                        label: 'voxelbench.export.vec3.model_name',
-                        value: ''
-                    },
+            Object.assign(structuredClone(modelBaseOptions),{
                     exportNormals: {
                         type: 'checkbox',
                         label: 'voxelbench.export.vec3.export_normals',
@@ -107,7 +120,7 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VCM (Voxel Core)', 'vcm',
-            Object.assign(structuredClone(baseOptions), {
+            Object.assign(structuredClone(modelBaseOptions), {
                     applyBonesRotation: {
                         type: 'checkbox',
                         label: 'voxelbench.export.apply_bones_rotation',
