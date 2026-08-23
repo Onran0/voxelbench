@@ -3,33 +3,12 @@ import * as texture_util from "../../util/texture_util.js"
 import { prettyJoin } from "../../util/floats_prettifier"
 
 const BBSideToVCM = {
-    north: "south",
-    south: "north",
-    east: "west",
-    west: "east",
+    north: "north",
+    south: "south",
+    east: "east",
+    west: "west",
     up: "top",
     down: "bottom"
-}
-
-function fixCubeFaceUV(face, uv) {
-    let [u1,v1,u2,v2] = uv
-
-    switch(face) {
-        case "north":
-        case "south":
-        case "east":
-            return [u1,v2,u2,v1]
-
-        case "down":
-        case "west":
-            return [u2,v2,u1,v1]
-
-        case "up":
-            return [u2,v1,u1,v2]
-
-        default:
-            return uv
-    }
 }
 
 export default function exportCube(element, builder, parentInfo, indent, options, baseIndent) {
@@ -69,10 +48,12 @@ export default function exportCube(element, builder, parentInfo, indent, options
             }
         }
 
-        let normalizedUv = fixCubeFaceUV(
-            faceName,
-            texture_util.normalizeUVByTexture(face.uv, texture)
-        )
+        let normalizedUv = texture_util.normalizeUVByTexture(face.uv, texture)
+
+        let tmp = normalizedUv[1]
+
+        normalizedUv[1] = normalizedUv[3]
+        normalizedUv[3] = tmp
 
         builder.push(`region (${normalizedUv.join(', ')})\n`)
     }
