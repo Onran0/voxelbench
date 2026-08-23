@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Onran
+// SPDX-License-Identifier: GPL-3.0-only
+
 import DataBuffer from '../util/DataBuffer'
 
 import getCubeSubmeshes from './vec3/cube.js'

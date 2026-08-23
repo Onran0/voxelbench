@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Onran
+// SPDX-License-Identifier: GPL-3.0-only
+
 import * as avec3 from "../../util/array_vec3";
 
 export default function getGroupSubmeshes(group, parent, options, getElementSubmeshes) {

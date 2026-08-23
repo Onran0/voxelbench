@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Onran
+// SPDX-License-Identifier: GPL-3.0-only
+
 import exportCube from './vcm/cube.js'
 import exportGroup from './vcm/group.js'
 import exportMesh from './vcm/mesh.js'
