@@ -40,7 +40,8 @@ export default function doExport(options) {
             parent: null
         }, '', {
             scale: 1/16, // from blockbench pixels to meters,
-            texturesPrefix: (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
+            texturesPrefix: (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix,
+            applyBonesRotation: options.applyBonesRotation
         })
     }
 

@@ -104,7 +104,14 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VCM (Voxel Core)', 'vcm',
-            baseOptions, exportVcm,
+            Object.assign({
+                    applyBonesRotation: {
+                        type: 'checkbox',
+                        label: 'voxelbench.export.apply_bones_rotation',
+                        value: true
+                    }
+                }, baseOptions
+            ), exportVcm,
             'export_vcm', 'voxelbench.vcm.export'
         )
     },

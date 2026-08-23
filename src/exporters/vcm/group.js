@@ -11,7 +11,7 @@ export default function exportGroup(element, builder, parentInfo, indent, option
 
     const q = element.mesh.quaternion
 
-    if(!avec3.is_zero(element.rotation))
+    if(!avec3.is_zero(element.rotation) && options.applyBonesRotation)
         builder.push(`rotate (${prettyJoin([ q.x, q.y, q.z, q.w ], ', ')}) `)
 
     builder.push(`{\n`)
