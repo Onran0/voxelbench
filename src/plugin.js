@@ -24,7 +24,7 @@ function registerFormat(
     const codec = new Codec(extension, {
         name: name,
         extension: extension,
-        export_options: typeof exportOptions === 'object' ? exportOptions : { },
+        export_options: typeof exportOptions === 'object' ? exportOptions : null,
 
         compile: compileFunction,
 
@@ -33,8 +33,14 @@ function registerFormat(
                 codec.export_options = exportOptions()
             }
 
-            let options = await codec.promptExportOptions()
-            if (options === null) return
+            let options
+
+            if(this.export_options != null) {
+                options = await codec.promptExportOptions()
+                if (options === null) return
+            } else {
+                options = { }
+            }
 
             Blockbench.export({
                 resource_id: extension,
@@ -120,7 +126,18 @@ Plugin.register('voxelbench', {
         }
 
         registerFormat(
-            'Entity skeleton (Voxel Core)', 'json', { },
+            'Entity skeleton (Voxel Core)', 'json', {
+                autoModelName: {
+                    type: 'checkbox',
+                    label: 'voxelbench.export.skeleton.auto_model_name',
+                    value: true
+                },
+                modelName: {
+                    type: 'text',
+                    label: 'voxelbench.export.skeleton.model_name',
+                    condition: (options) => !options.autoModelName
+                }
+            },
             exportSkeleton, 'export_vc_skeleton', 'voxelbench.skeleton.export'
         )
 

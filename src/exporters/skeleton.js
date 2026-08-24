@@ -1,6 +1,8 @@
 // Copyright (C) 2026 Onran
 // SPDX-License-Identifier: GPL-3.0-only
 
+import { getFileStem } from '../util/path'
+
 import * as avec3 from "../util/array_vec3";
 
 function exportGroup(parentObject, parentOrigin, group, options) {
@@ -29,6 +31,12 @@ function exportGroup(parentObject, parentOrigin, group, options) {
 }
 
 export default function doExport(options) {
+    options = Object.assign(structuredClone(options), {
+            modelName: options.autoModelName ? getFileStem(options.filePath) : options.modelName,
+            scale: 1/16 // from blockbench pixels to meters,
+        }
+    )
+
     let skeleton = { }
 
     let needToExportModel = false
