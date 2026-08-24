@@ -139,7 +139,8 @@ export default function doExport(options) {
     const [meshBuffers, textureNames] = exportMeshes({
         scale: 1/16, // from blockbench pixels to meters,
         texturesPrefix: texturesPrefix,
-        exportNormals: options.exportNormals
+        exportNormals: options.exportNormals,
+        applyBonesRotation: options.applyBonesRotation
     })
 
     /* body */

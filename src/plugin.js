@@ -119,6 +119,11 @@ Plugin.register('voxelbench', {
         registerFormat(
             'VEC3 (Voxel Core)', 'vec3',
             Object.assign(structuredClone(modelBaseOptions),{
+                    exportSkeleton: {
+                        type: 'checkbox',
+                        label: 'voxelbench.export.vec3.export_skeleton',
+                        value: false
+                    },
                     exportNormals: {
                         type: 'checkbox',
                         label: 'voxelbench.export.vec3.export_normals',

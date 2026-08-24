@@ -7,7 +7,7 @@ export default function getGroupSubmeshes(group, parent, options, getElementSubm
     const myNode = {
         parent: parent,
         origin: parent != null ? avec3.sub(group.origin, parent.origin) : group.origin,
-        rotation: group.mesh.quaternion
+        rotation: options.applyBonesRotation ? group.mesh.quaternion : new THREE.Quaternion().identity()
     }
 
     let submeshes =  { }
