@@ -106,7 +106,8 @@ Plugin.register('voxelbench', {
                 options: {
                     entity: 'voxelbench.export.target_usage.entity',
                     block: 'voxelbench.export.target_usage.block'
-                }
+                },
+                default: 'block'
             },
         }
 
@@ -135,7 +136,8 @@ Plugin.register('voxelbench', {
                                 animation.uuid,
                                 animation.name
                             ])
-                        )
+                        ),
+                        default: Animator.animations[0].uuid
                     }
                 }
             }, exportVca,
