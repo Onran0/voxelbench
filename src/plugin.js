@@ -8,6 +8,7 @@ import pluginIcon from '../assets/plugin/icon.png'
 import exportVcm from './exporters/vcm.js'
 import exportVec3 from './exporters/vec3.js'
 import exportVca from './exporters/vca.js'
+import exportSkeleton from './exporters/skeleton.js'
 
 import translations from '../assets/plugin/translations.json'
 
@@ -82,6 +83,8 @@ function registerFormat(
     MenuBar.addAction(action, "file.export.0")
 
     actions.push(action)
+
+    return codec
 }
 
 let actions = [ ]
@@ -117,12 +120,17 @@ Plugin.register('voxelbench', {
         }
 
         registerFormat(
+            'Entity skeleton (Voxel Core)', 'json', { },
+            exportSkeleton, 'export_vc_skeleton', 'voxelbench.skeleton.export'
+        )
+
+        registerFormat(
             'VEC3 (Voxel Core)', 'vec3',
             Object.assign(structuredClone(modelBaseOptions),{
-                    exportSkeleton: {
+                    singleModel: {
                         type: 'checkbox',
-                        label: 'voxelbench.export.vec3.export_skeleton',
-                        value: false
+                        label: 'voxelbench.export.vec3.single_model',
+                        value: true
                     },
                     exportNormals: {
                         type: 'checkbox',
@@ -165,10 +173,7 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VCM (Voxel Core Model)', 'vcm',
-            Object.assign(structuredClone(modelBaseOptions), {
-
-                }
-            ), exportVcm,
+            Object.assign(structuredClone(modelBaseOptions), { }), exportVcm,
             'export_vcm', 'voxelbench.vcm.export'
         )
     },

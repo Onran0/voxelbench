@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 
 import DataBuffer from '../util/DataBuffer'
-import { getFileStem } from "../util/path"
+import { getFileStem } from '../util/path'
 
 import getCubeSubmeshes from './vec3/cube.js'
 import getGroupSubmeshes from './vec3/group.js'
@@ -31,14 +31,14 @@ const ATTR_POSITION = 0
 const ATTR_UV = 1
 const ATTR_NORMAL = 2
 
-function getElementSubmeshes(element, parent, options) {
+function getElementSubmeshes(element, parent, options, ignoreChildGroups) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return { }
 
     const elementSubmeshesBuilder = submeshBuilders[element.constructor]
 
     if(elementSubmeshesBuilder != null) {
-        return elementSubmeshesBuilder(element, parent, options, getElementSubmeshes)
+        return elementSubmeshesBuilder(element, parent, options, getElementSubmeshes, ignoreChildGroups)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
@@ -47,14 +47,13 @@ function getElementSubmeshes(element, parent, options) {
     }
 }
 
-function exportMeshes(options) {
+function exportMeshes(nodes, ignoreChildGroups, textureNames, options) {
     let meshBuffers = [ ]
-    let textureNames = [ ]
 
     let meshesMap = { }
 
-    for (const element of Outliner.root) {
-        const submeshes = getElementSubmeshes(element, null, options)
+    for (const element of nodes) {
+        const submeshes = getElementSubmeshes(element, null, options, ignoreChildGroups)
 
         for(const texture in submeshes) {
             const submesh = submeshes[texture]
@@ -77,7 +76,7 @@ function exportMeshes(options) {
     }
 
     for(const textureName in meshesMap) {
-        textureNames.push(textureName)
+        textureNames.safePush(...textureName)
 
         const { coords, uvs, normals } = meshesMap[textureName]
 
@@ -90,7 +89,7 @@ function exportMeshes(options) {
         const u16Indices = trianglesCount > 256
 
         buffer.putUint32(trianglesCount)
-        buffer.putUint16(textureNames.length - 1) // material id
+        buffer.putUint16(textureNames.indexOf(textureName)) // material id
         buffer.putUint16(u16Indices ? U16_INDICES : 0) // flags
         buffer.putUint16(attributesCount)
 
@@ -122,13 +121,58 @@ function exportMeshes(options) {
         meshBuffers.push(buffer)
     }
 
-    return [meshBuffers, textureNames]
+    return meshBuffers
 }
 
 export default function doExport(options) {
-    let buffer = new DataBuffer()
+    const scale = 1/16 // from blockbench pixels to meters
 
     const texturesPrefix = (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
+    const rootModelName = getFileStem(options.filePath)
+
+    options = Object.assign(structuredClone(options), {
+            scale: scale,
+            texturesPrefix: texturesPrefix
+        }
+    )
+
+    let models = [ ]
+    let textureNames = [ ]
+
+    if(!options.singleModel) {
+        function exportGroup(group, isRoot) {
+            const children = isRoot ? Outliner.root : group.children
+
+            let needToExport = false
+
+            for(const child of children) {
+                if(child instanceof Group) {
+                    exportGroup(child)
+                } else if(child instanceof Cube || child instanceof Mesh) {
+                    needToExport = true
+                }
+            }
+
+            if(needToExport) {
+                models.push({
+                    name: isRoot ? rootModelName : rootModelName + '.' + group.name,
+                    meshBuffers: exportMeshes(
+                        isRoot ? Outliner.root : [ group ],
+                        true, textureNames, options
+                    )
+                })
+            }
+        }
+
+        exportGroup(null, true)
+    } else {
+        models.push({
+            name: rootModelName,
+            meshBuffers: exportMeshes(Outliner.root, false, textureNames, options),
+        })
+    }
+
+    let buffer = new DataBuffer()
 
     /* header */
 
@@ -136,17 +180,10 @@ export default function doExport(options) {
     buffer.putUint16(VERSION)
     buffer.putUint16(0) // reserved
 
-    const [meshBuffers, textureNames] = exportMeshes({
-        scale: 1/16, // from blockbench pixels to meters,
-        texturesPrefix: texturesPrefix,
-        exportNormals: options.exportNormals,
-        applyBonesRotation: options.applyBonesRotation
-    })
-
     /* body */
 
     buffer.putUint16(textureNames.length) // materials count
-    buffer.putUint16(1) // models count
+    buffer.putUint16(models.length)
 
     // materials
     for(let textureName of textureNames) {
@@ -157,27 +194,27 @@ export default function doExport(options) {
         buffer.putUtf(textureName)
     }
 
+    // offset for center model for blocks or entities
+    const origin = options.targetUsage === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+
     // models
 
-    const modelName = getFileStem(options.filePath)
+    for(const model of models) {
+        buffer.putUint16(buffer.getBytesCountInUtf(model.name))
 
-    buffer.putUint16(buffer.getBytesCountInUtf(modelName))
+        // origin
+        buffer.putFloat32(origin[0])
+        buffer.putFloat32(origin[1])
+        buffer.putFloat32(origin[2])
 
-    // offset for center model for blocks or entities
-    let origin = options.targetUsage === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+        buffer.putUint32(model.meshBuffers.length)
 
-    // origin
-    buffer.putFloat32(origin[0])
-    buffer.putFloat32(origin[1])
-    buffer.putFloat32(origin[2])
+        // meshes
+        for(const meshBuffer of model.meshBuffers)
+            buffer.putBuffer(meshBuffer)
 
-    buffer.putUint32(meshBuffers.length)
-
-    // meshes
-    for(const meshBuffer of meshBuffers)
-        buffer.putBuffer(meshBuffer)
-
-    buffer.putUtf(modelName)
+        buffer.putUtf(model.name)
+    }
 
     return buffer.getArrayBuffer()
 }
