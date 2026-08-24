@@ -3,7 +3,7 @@
 
 import * as avec3 from "../../util/array_vec3";
 
-export default function getGroupSubmeshes(group, parent, options, getElementSubmeshes, ignoreChildGroups) {
+export default function getGroupSubmeshes(group, parent, options, getElementSubmeshes) {
     const myNode = {
         parent: parent,
         origin: parent != null ? avec3.sub(group.origin, parent.origin) : group.origin,
@@ -13,10 +13,10 @@ export default function getGroupSubmeshes(group, parent, options, getElementSubm
     let submeshes =  { }
 
     for(let child of group.children) {
-        if(child instanceof Group && ignoreChildGroups)
+        if(child instanceof Group && !options.singleModel)
             continue
 
-        const elementSubmeshes = getElementSubmeshes(child, myNode, options, ignoreChildGroups)
+        const elementSubmeshes = getElementSubmeshes(child, myNode, options)
 
         for(let texture in elementSubmeshes) {
             const submesh = elementSubmeshes[texture]

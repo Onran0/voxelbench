@@ -5,22 +5,20 @@ import { getFileStem } from '../util/path'
 
 import * as avec3 from "../util/array_vec3";
 
-function exportGroup(parentObject, parentOrigin, group, options) {
+function exportGroup(parentChildren, parentOrigin, group, options) {
     const relativeOrigin = avec3.scale(avec3.sub(group.origin, parentOrigin), options.scale)
 
     let groupObject = {
         name: group.name,
-        offset: relativeOrigin,
     }
+
+    let nodes = [ ]
 
     let needToExportModel = false
 
     for(const child of group.children) {
         if(child instanceof Group) {
-            if(groupObject.nodes == null)
-                groupObject.nodes = [ ]
-
-            exportGroup(groupObject, group.origin, child, options)
+            exportGroup(nodes, group.origin, child, options)
         } else if(child instanceof Cube || child instanceof Mesh) {
             needToExportModel = true
         }
@@ -28,6 +26,14 @@ function exportGroup(parentObject, parentOrigin, group, options) {
 
     if(needToExportModel)
         groupObject.model = options.modelName + "." + group.name
+
+    if(!avec3.is_zero(relativeOrigin))
+        groupObject.offset = relativeOrigin
+
+    if(nodes.length > 0)
+        groupObject.nodes = nodes
+
+    parentChildren.push(groupObject)
 }
 
 export default function doExport(options) {
@@ -37,16 +43,14 @@ export default function doExport(options) {
         }
     )
 
-    let skeleton = { }
+    let skeleton = { offset: [ 0, -0.5, 0 ] }
+    let nodes = [ ]
 
     let needToExportModel = false
 
     for (const element of Outliner.root) {
         if(element instanceof Group) {
-            if(skeleton.nodes == null)
-                skeleton.nodes = [ ]
-
-            exportGroup(skeleton, [ 0, 0, 0 ], element, options)
+            exportGroup(nodes, [ 0, 0, 0 ], element, options)
         } else if(element instanceof Cube || element instanceof Mesh) {
             needToExportModel = true
         }
@@ -54,6 +58,9 @@ export default function doExport(options) {
 
     if(needToExportModel)
         skeleton.model = options.modelName
+
+    if(nodes.length > 0)
+        skeleton.nodes = nodes
 
     return JSON.stringify({ root: skeleton }, null, 4)
 }

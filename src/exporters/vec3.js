@@ -31,14 +31,14 @@ const ATTR_POSITION = 0
 const ATTR_UV = 1
 const ATTR_NORMAL = 2
 
-function getElementSubmeshes(element, parent, options, ignoreChildGroups) {
+function getElementSubmeshes(element, parent, options) {
     if(!element.export || (element.visibility != null && !element.visibility))
         return { }
 
     const elementSubmeshesBuilder = submeshBuilders[element.constructor]
 
     if(elementSubmeshesBuilder != null) {
-        return elementSubmeshesBuilder(element, parent, options, getElementSubmeshes, ignoreChildGroups)
+        return elementSubmeshesBuilder(element, parent, options, getElementSubmeshes)
     } else {
         console.warn(
             `failed to export element "${element}" with type "${element.constructor}" because no exporter is defined for it`
@@ -47,13 +47,13 @@ function getElementSubmeshes(element, parent, options, ignoreChildGroups) {
     }
 }
 
-function exportMeshes(nodes, ignoreChildGroups, textureNames, options) {
+function exportMeshes(nodes, textureNames, options) {
     let meshBuffers = [ ]
 
     let meshesMap = { }
 
     for (const element of nodes) {
-        const submeshes = getElementSubmeshes(element, null, options, ignoreChildGroups)
+        const submeshes = getElementSubmeshes(element, null, options)
 
         for(const texture in submeshes) {
             const submesh = submeshes[texture]
@@ -76,7 +76,8 @@ function exportMeshes(nodes, ignoreChildGroups, textureNames, options) {
     }
 
     for(const textureName in meshesMap) {
-        textureNames.safePush(...textureName)
+        if(!textureNames.includes(textureName))
+            textureNames.push(textureName)
 
         const { coords, uvs, normals } = meshesMap[textureName]
 
@@ -155,10 +156,10 @@ export default function doExport(options) {
 
             if(needToExport) {
                 models.push({
-                    name: isRoot ? rootModelName : rootModelName + '.' + group.name,
+                    name: isRoot ? rootModelName : group.name,
                     meshBuffers: exportMeshes(
                         isRoot ? Outliner.root : [ group ],
-                        true, textureNames, options
+                        textureNames, options
                     )
                 })
             }
@@ -168,7 +169,7 @@ export default function doExport(options) {
     } else {
         models.push({
             name: rootModelName,
-            meshBuffers: exportMeshes(Outliner.root, false, textureNames, options),
+            meshBuffers: exportMeshes(Outliner.root, textureNames, options),
         })
     }
 
@@ -195,7 +196,9 @@ export default function doExport(options) {
     }
 
     // offset for center model for blocks or entities
-    const origin = options.targetUsage === 'entity' ? [ 0, 0.5, 0 ] : [ -0.5, 0, -0.5 ]
+    const origin = options.targetUsage === 'entity'
+        ? (options.singleModel ? [ 0, 0.5, 0 ] : [ 0, 0, 0 ])
+        : [ -0.5, 0, -0.5 ]
 
     // models
 

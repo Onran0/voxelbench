@@ -10,6 +10,8 @@ import exportVec3 from './exporters/vec3.js'
 import exportVca from './exporters/vca.js'
 import exportSkeleton from './exporters/skeleton.js'
 
+import deepCopy from './util/deep_copy.js'
+
 import translations from '../assets/plugin/translations.json'
 
 for(let lang in translations)
@@ -121,7 +123,8 @@ Plugin.register('voxelbench', {
             applyBonesRotation: {
                 type: 'checkbox',
                 label: 'voxelbench.export.apply_bones_rotation',
-                value: true
+                value: true,
+                condition: (options) => options.targetUsage === 'entity'
             }
         }
 
@@ -143,11 +146,12 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VEC3 (Voxel Core)', 'vec3',
-            Object.assign(structuredClone(modelBaseOptions),{
+            Object.assign(deepCopy(modelBaseOptions),{
                     singleModel: {
                         type: 'checkbox',
                         label: 'voxelbench.export.vec3.single_model',
-                        value: true
+                        value: true,
+                        condition: (options) => options.targetUsage === 'entity'
                     },
                     exportNormals: {
                         type: 'checkbox',
@@ -190,7 +194,7 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VCM (Voxel Core Model)', 'vcm',
-            Object.assign(structuredClone(modelBaseOptions), { }), exportVcm,
+            Object.assign(deepCopy(modelBaseOptions), { }), exportVcm,
             'export_vcm', 'voxelbench.vcm.export'
         )
     },

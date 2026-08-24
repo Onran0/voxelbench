@@ -47,6 +47,10 @@ export function applyTransforms(parent, vertices, normals, baseOrigin, baseRotat
 }
 
 export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
+    if(parent != null) {
+        origin = avec3.sub(origin, avec3.scale(parent.origin, options.singleModel ? 1 : 2))
+    }
+
     const geo = mesh.geometry
 
     const posAttr = geo.attributes.position.array
@@ -132,7 +136,7 @@ export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
 export default function getMeshSubmeshes(mesh, parent, options) {
     return getThreeMeshSubmeshes(
         mesh.mesh,
-        parent != null ? avec3.sub(mesh.origin, parent.origin) : mesh.origin,
+        mesh.origin,
         parent,
         options
     )
