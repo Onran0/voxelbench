@@ -18,7 +18,7 @@
     "voxelbench.vec3.export": "Export VEC3 Model"
   },
   "ru": {
-    "voxelbench.export.target_usage": "Целевое использование",
+    "voxelbench.export.target_usage": "Целевое применение",
     "voxelbench.export.target_usage.entity": "Сущность",
     "voxelbench.export.target_usage.block": "Блок",
     "voxelbench.export.apply_bones_rotation": "Применить вращение костей",

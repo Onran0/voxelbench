@@ -7,7 +7,11 @@ import { prettyJoin } from "../../util/floats_prettifier"
 export default function exportGroup(element, builder, parentInfo, indent, options, baseIndent, exportElement) {
     let relativeOrigin = avec3.scale(avec3.sub(element.origin, parentInfo.origin), options.scale)
 
-    builder.push(`${indent}@bone name "${element.name}" `)
+    if(options.targetUsage === 'block') {
+        builder.push(`${indent}@bone `)
+    } else {
+        builder.push(`${indent}@bone name "${element.name}" `)
+    }
 
     if(!avec3.is_zero(relativeOrigin))
         builder.push(`move (${prettyJoin(relativeOrigin, `, `)}) `)
