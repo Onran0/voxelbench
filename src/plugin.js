@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Onran
 // SPDX-License-Identifier: GPL-3.0-only
 
-const version = '0.5.0'
+const version = '5.0.0'
 
 import pluginIcon from '../assets/plugin/icon.png'
 
