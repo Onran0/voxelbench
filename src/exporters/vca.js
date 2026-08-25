@@ -1,8 +1,11 @@
 // Copyright (C) 2026 Onran
 // SPDX-License-Identifier: GPL-3.0-only
 
-const AXISES = [ 'x', 'y', 'z' ]
-const CHANNELS = [ 'position', 'rotation' ]
+const AXES = [ 'x', 'y', 'z' ]
+
+const CHANNEL_POSITION = 'position'
+const CHANNEL_ROTATION = 'rotation'
+const CHANNELS = [ CHANNEL_POSITION, CHANNEL_ROTATION ]
 
 import { prettify } from "../util/floats_prettifier"
 
@@ -15,11 +18,11 @@ const VCA_INTERPS_MAP = {
     step: 'const',
     linear: 'linear',
     bezier: 'bezier',
-    catmullrom: 'bezier' // keys auto converts into bezier
+    catmullrom: 'bezier'
 }
 
 function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, fps, options) {
-    const axisIndex = AXISES.indexOf(axis)
+    const axisIndex = AXES.indexOf(axis)
 
     const vcaChannel = VCA_CHANNELS_MAP[channel]
 
@@ -53,16 +56,21 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
                 Timeline.setTime(frame / fps)
 
                 const vector = animator.interpolate(channel, false)
-                const comp = vector[axisIndex]
+
+                let value = vector[axisIndex]
+
+                if(channel === CHANNEL_POSITION) {
+                    value -= options.worldCenter[axisIndex]
+                }
 
                 if(prevValue != null) {
-                    if(prevValue !== comp)
+                    if(prevValue !== value)
                         fullyValuesEqual = false
                 }
 
-                prevValue = comp
+                prevValue = value
 
-                kfsBuilder.push(`\t@key frame ${frame} value ${prettify(comp)}\n`)
+                kfsBuilder.push(`\t@key frame ${frame} value ${prettify(value)}\n`)
             }
 
             Timeline.setTime(0)
@@ -79,7 +87,13 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
         for(const keyframe of keyframes) {
             const frame = Math.floor(keyframe.time * fps)
 
-            builder.push(`\t@key frame ${frame} value ${prettify(keyframe.data_points[0][axis])}`)
+            let value = keyframe.data_points[0][axis]
+
+            if(channel === CHANNEL_POSITION) {
+                value -= options.worldCenter[axisIndex]
+            }
+
+            builder.push(`\t@key frame ${frame} value ${prettify(value)}`)
 
             if(interpType === 'bezier') {
                 builder.push(` lx ${prettify(keyframe.bezier_left_time[axisIndex])}`)
@@ -117,7 +131,7 @@ export default function doExport(options) {
                     const axisesToExport = []
 
                     for(const keyframe of keyframes) {
-                        for(const axis of AXISES) {
+                        for(const axis of AXES) {
                             if(keyframe.data_points[0][axis] != null) {
                                 axisesToExport.safePush(...axis)
                             }

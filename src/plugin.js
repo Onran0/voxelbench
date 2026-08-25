@@ -44,6 +44,8 @@ function registerFormat(
                 options = { }
             }
 
+            options.worldCenter = Project.format.id === 'java_block' ? [ -0.5, 0, -0.5 ] : [ 0, 0, 0 ]
+
             Blockbench.export({
                 resource_id: extension,
                 type: name,

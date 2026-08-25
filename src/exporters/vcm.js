@@ -4,6 +4,7 @@
 import exportCube from './vcm/cube.js'
 import exportGroup from './vcm/group.js'
 import exportMesh from './vcm/mesh.js'
+import * as avec3 from "../util/array_vec3"
 
 export const INDENT = `    `
 
@@ -29,10 +30,12 @@ export function exportElement(element, builder, parentInfo, indent, options) {
 }
 
 export default function doExport(options) {
-    let initialOrigin = [ -0.5*16, 0, -0.5*16 ] // offset for center model on blocks
+    let initialOrigin = [ -0.5, 0, -0.5 ] // offset for center model on blocks
 
     if(options.targetUsage === 'entity')
-        initialOrigin = [ 0, 0.5*16, 0 ] // offset for center model on entities
+        initialOrigin = [ 0, 0.5, 0 ] // offset for center model on entities
+
+    initialOrigin = avec3.scale(avec3.sub(initialOrigin, options.worldCenter), 16)
 
     let builder = [ ]
 

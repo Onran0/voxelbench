@@ -3,6 +3,7 @@
 
 import DataBuffer from '../util/DataBuffer'
 import { getFileStem } from '../util/path'
+import * as avec3 from "../util/array_vec3"
 
 import getCubeSubmeshes from './vec3/cube.js'
 import getGroupSubmeshes from './vec3/group.js'
@@ -195,24 +196,23 @@ export default function doExport(options) {
         buffer.putUtf(textureName)
     }
 
-    // offset for center model for blocks or entities
-    const origin = options.targetUsage === 'entity'
+    // model center for blocks or entities
+    const origin = avec3.sub(
+        options.targetUsage === 'entity'
         ? (options.singleModel ? [ 0, 0.5, 0 ] : [ 0, 0, 0 ])
-        : [ -0.5, 0, -0.5 ]
-
-    // models
+        : [ -0.5, 0, -0.5 ],
+        options.worldCenter
+    )
 
     for(const model of models) {
         buffer.putUint16(buffer.getBytesCountInUtf(model.name))
 
-        // origin
         buffer.putFloat32(origin[0])
         buffer.putFloat32(origin[1])
         buffer.putFloat32(origin[2])
 
         buffer.putUint32(model.meshBuffers.length)
 
-        // meshes
         for(const meshBuffer of model.meshBuffers)
             buffer.putBuffer(meshBuffer)
 
