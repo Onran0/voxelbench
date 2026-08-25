@@ -38,17 +38,14 @@ export default function exportCube(element, builder, parentInfo, indent, options
 
         builder.push(`${indent}${baseIndent}@part tags (${BBSideToVCM[faceName]}) `)
 
-        let texture
+        let texture = face.texture !== false ? texture_util.findTexture(face.texture) : null
 
-        if(face.texture !== false) {
-            texture = texture_util.findTexture(face.texture)
+        const textureName = texture != null ? texture_util.getTextureName(texture) : ''
 
-            if (texture) {
-                const textureName = texture_util.getTextureName(texture)
-
-                if(textureName.trim() !== '')
-                    builder.push(`texture "${options.texturesPrefix + textureName}" `)
-            }
+        if (textureName.trim() !== '') {
+            builder.push(`texture "${options.texturesPrefix + textureName}" `)
+        } else if(options.colorUntextured) {
+            builder.push('texture "blocks:white" ')
         }
 
         let normalizedUv = texture_util.normalizeUVByTexture(face.uv, texture)

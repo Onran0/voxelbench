@@ -37,6 +37,17 @@ export default function doExport(options) {
 
     initialOrigin = avec3.scale(avec3.sub(initialOrigin, options.worldCenter), 16)
 
+    const texturesPrefix = (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
+
+    options = Object.assign(structuredClone(options), {
+            scale: 1/16, // from blockbench pixels to meters,
+            texturesPrefix: texturesPrefix,
+            applyBonesRotation: options.applyBonesRotation,
+            targetUsage: options.targetUsage,
+            replaceUntexturedByWhite: options.replaceUntexturedByWhite
+        }
+    )
+
     let builder = [ ]
 
     for (const element of Outliner.root) {
@@ -44,12 +55,7 @@ export default function doExport(options) {
             origin: initialOrigin,
             rotation: [ 0, 0, 0 ],
             parent: null
-        }, '', {
-            scale: 1/16, // from blockbench pixels to meters,
-            texturesPrefix: (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix,
-            applyBonesRotation: options.applyBonesRotation,
-            targetUsage: options.targetUsage
-        })
+        }, '', options)
     }
 
     return builder.join('')

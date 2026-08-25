@@ -132,6 +132,8 @@ export default function doExport(options) {
     const texturesPrefix = (options.targetUsage === 'block' ? 'blocks:' : '' ) + options.texturesPrefix
     const rootModelName = getFileStem(options.filePath)
 
+    const missingTex = options.colorUntextured ? 'blocks:white' : ''
+
     options = Object.assign(structuredClone(options), {
             scale: scale,
             texturesPrefix: texturesPrefix
@@ -189,7 +191,7 @@ export default function doExport(options) {
 
     // materials
     for(let textureName of textureNames) {
-        textureName = textureName.length !== 0 ? texturesPrefix + textureName : ''
+        textureName = textureName.length !== 0 ? texturesPrefix + textureName : missingTex
 
         buffer.putUint16(0) // flags
         buffer.putUint16(buffer.getBytesCountInUtf(textureName))

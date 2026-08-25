@@ -87,7 +87,7 @@ export function getThreeMeshSubmeshes(mesh, origin, parent, options) {
 
     for (const group of groups) {
         const material = materials[group.materialIndex]
-        let texture = material != null ? texture_util.getTextureName(material) || '' : ''
+        let texture = material != null ? texture_util.getTextureName(material) : ''
 
         let coords = [ ], uvs = [ ], normals = options.exportNormals ? [ ] : undefined
 

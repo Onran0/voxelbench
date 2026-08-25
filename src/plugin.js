@@ -127,6 +127,12 @@ Plugin.register('voxelbench', {
                 label: 'voxelbench.export.apply_bones_rotation',
                 value: true,
                 condition: (options) => options.targetUsage === 'entity'
+            },
+            colorUntextured: {
+                type: 'checkbox',
+                label: 'voxelbench.export.color_untextured',
+                value: false,
+                condition: (options) => options.targetUsage === 'block'
             }
         }
 

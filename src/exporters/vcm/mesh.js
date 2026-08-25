@@ -75,11 +75,12 @@ export default function exportMesh(mesh, builder, parentInfo, indent, options) {
             if (uv)
                 builder.push(` uv (${uv.join(', ')})`)
 
-            if (texture) {
-                const textureName = texture_util.getTextureName(texture)
+            const textureName = texture != null ? texture_util.getTextureName(texture) : ''
 
-                if(textureName.trim() !== '')
-                    builder.push(` texture "${options.texturesPrefix + textureName}"`)
+            if (textureName.trim() !== '') {
+                builder.push(` texture "${options.texturesPrefix + textureName}" `)
+            } else if(options.colorUntextured) {
+                builder.push(' texture "blocks:white" ')
             }
 
             builder.push(`\n`)
