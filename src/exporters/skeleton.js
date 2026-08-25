@@ -43,7 +43,7 @@ export default function doExport(options) {
         }
     )
 
-    let skeleton = { offset: [ 0, -0.5, 0 ] }
+    let skeleton = { offset: [ 0, -0.5 - options.worldCenter[1], 0 ] }
     let nodes = [ ]
 
     let needToExportModel = false

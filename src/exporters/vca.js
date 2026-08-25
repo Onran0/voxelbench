@@ -128,17 +128,17 @@ export default function doExport(options) {
                 if(animator[channel] && animator[channel].length > 0) {
                     const keyframes = animator[channel]
 
-                    const axisesToExport = []
+                    const axesToExport = []
 
                     for(const keyframe of keyframes) {
                         for(const axis of AXES) {
                             if(keyframe.data_points[0][axis] != null) {
-                                axisesToExport.safePush(...axis)
+                                axesToExport.safePush(...axis)
                             }
                         }
                     }
 
-                    for(const axis of axisesToExport) {
+                    for(const axis of axesToExport) {
                         exportAxisKeyframes(
                             builder,
                             boneName, channel, axis,
