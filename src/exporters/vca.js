@@ -5,13 +5,15 @@ const AXES = [ 'x', 'y', 'z' ]
 
 const CHANNEL_POSITION = 'position'
 const CHANNEL_ROTATION = 'rotation'
-const CHANNELS = [ CHANNEL_POSITION, CHANNEL_ROTATION ]
+const CHANNEL_SCALE = 'scale'
+const CHANNELS = [ CHANNEL_POSITION, CHANNEL_ROTATION, CHANNEL_SCALE ]
 
 import { prettify } from "../util/floats_prettifier"
 
 const VCA_CHANNELS_MAP = {
     position: 'move',
-    rotation: 'rotate'
+    rotation: 'rotate',
+    scale: 'scale'
 }
 
 const VCA_INTERPS_MAP = {
@@ -96,10 +98,10 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
             builder.push(`\t@key frame ${frame} value ${prettify(value)}`)
 
             if(interpType === 'bezier') {
-                builder.push(` lx ${prettify(keyframe.bezier_left_time[axisIndex])}`)
-                builder.push(` ly ${prettify(keyframe.bezier_left_value[axisIndex])}`)
-                builder.push(` rx ${prettify(keyframe.bezier_right_time[axisIndex])}`)
-                builder.push(` ry ${prettify(keyframe.bezier_right_value[axisIndex])}`)
+                builder.push(` lx ${prettify(Math.floor(keyframe.bezier_left_time[axisIndex] || 0) * fps)}`)
+                builder.push(` ly ${prettify(keyframe.bezier_left_value[axisIndex] || 0)}`)
+                builder.push(` rx ${prettify(Math.floor(keyframe.bezier_right_time[axisIndex] || 0) * fps)}`)
+                builder.push(` ry ${prettify(keyframe.bezier_right_value[axisIndex] || 0)}`)
             }
 
             builder.push('\n')
