@@ -45,6 +45,7 @@ function registerFormat(
             }
 
             options.worldCenter = Project.format.id === 'java_block' ? [ -0.5, 0, -0.5 ] : [ 0, 0, 0 ]
+            options.applyBonesRotation = true
 
             Blockbench.export({
                 resource_id: extension,
@@ -122,12 +123,12 @@ Plugin.register('voxelbench', {
                 },
                 default: 'block'
             },
-            applyBonesRotation: {
-                type: 'checkbox',
-                label: 'voxelbench.export.apply_bones_rotation',
-                value: true,
-                condition: (options) => options.targetUsage === 'entity'
-            },
+            // applyBonesRotation: {
+            //     type: 'checkbox',
+            //     label: 'voxelbench.export.apply_bones_rotation',
+            //     value: true,
+            //     condition: (options) => options.targetUsage === 'entity'
+            // },
             colorUntextured: {
                 type: 'checkbox',
                 label: 'voxelbench.export.color_untextured',
