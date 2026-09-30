@@ -9,7 +9,6 @@ const CHANNEL_SCALE = 'scale'
 const CHANNELS = [ CHANNEL_POSITION, CHANNEL_ROTATION, CHANNEL_SCALE ]
 
 import { prettify } from "../util/floats_prettifier"
-import catmullromToRelativeBezierControlPoints from "../util/catmullrom_to_bezier"
 
 const VCA_CHANNELS_MAP = {
     position: 'move',
@@ -22,6 +21,34 @@ const VCA_INTERPS_MAP = {
     linear: 'linear',
     bezier: 'bezier',
     catmullrom: 'bezier'
+}
+
+function catmullromToRelativeBezierControlPoints(sortedKeyframes, keyframeIndex, axis) {
+    const len = sortedKeyframes.length
+
+    function getKeyframeVector(index) {
+        const clampedIndex = Math.max(0, Math.min(len - 1, index))
+
+        console.log(index, clampedIndex, sortedKeyframes.length)
+
+        const kf = sortedKeyframes[clampedIndex]
+        return new THREE.Vector2(kf.time, kf.calc(axis))
+    }
+
+    const previous = getKeyframeVector(keyframeIndex - 1)
+    const next = getKeyframeVector(keyframeIndex + 1)
+
+    const tangent = next
+        .clone()
+        .sub(previous)
+        .divideScalar(6)
+
+    return [
+        -tangent.x,
+        -tangent.y,
+        tangent.x,
+        tangent.y
+    ]
 }
 
 function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, fps, options) {
@@ -92,7 +119,7 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
         for(const keyframe of keyframes) {
             const frame = Math.floor(keyframe.time * fps)
 
-            let value = keyframe.data_points[0][axis]
+            let value = keyframe.calc(axis)
 
             if(channel === CHANNEL_POSITION) {
                 value -= options.worldCenter[axisIndex]
@@ -103,18 +130,18 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
             let lx, ly, rx, ry
 
             if(interpType === 'bezier') {
-                lx = Math.floor(keyframe.bezier_left_time[axisIndex] || 0) * fps
+                lx = keyframe.bezier_left_time[axisIndex] || 0
                 ly = keyframe.bezier_left_value[axisIndex] || 0
-                rx = Math.floor(keyframe.bezier_right_time[axisIndex] || 0) * fps
+                rx = keyframe.bezier_right_time[axisIndex] || 0
                 ry = keyframe.bezier_right_value[axisIndex] || 0
             } else if(interpType === 'catmullrom') {
-                [ lx, ly, rx, ry ] = catmullromToRelativeBezierControlPoints(keyframe, kfIndex, axis)
+                [ lx, ly, rx, ry ] = catmullromToRelativeBezierControlPoints(keyframes, kfIndex, axis)
             }
 
             if(interpType === 'bezier' || interpType === 'catmullrom') {
-                builder.push(` lx ${prettify(lx)}`)
+                builder.push(` lx ${prettify(Math.floor(lx * fps))}`)
                 builder.push(` ly ${prettify(ly)}`)
-                builder.push(` rx ${prettify(rx)}`)
+                builder.push(` rx ${prettify(Math.floor(rx * fps))}`)
                 builder.push(` ry ${prettify(ry)}`)
             }
 
@@ -150,7 +177,7 @@ export default function doExport(options) {
 
                     for(const keyframe of keyframes) {
                         for(const axis of AXES) {
-                            if(keyframe.data_points[0][axis] != null) {
+                            if(keyframe.calc(axis) != null) {
                                 axesToExport.safePush(...axis)
                             }
                         }
