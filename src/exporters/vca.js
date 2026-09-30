@@ -29,8 +29,6 @@ function catmullromToRelativeBezierControlPoints(sortedKeyframes, keyframeIndex,
     function getKeyframeVector(index) {
         const clampedIndex = Math.max(0, Math.min(len - 1, index))
 
-        console.log(index, clampedIndex, sortedKeyframes.length)
-
         const kf = sortedKeyframes[clampedIndex]
         return new THREE.Vector2(kf.time, kf.calc(axis))
     }
@@ -76,7 +74,15 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
 
     let boneBuilder = [ ]
 
-    boneBuilder.push(`@${vcaChannel} bone "${bone}" by ${axis} curve ${bake ? 'linear' : VCA_INTERPS_MAP[interpType]} {\n`)
+    boneBuilder.push(`@${vcaChannel} bone `)
+
+    if(bone.includes(" ")) {
+        boneBuilder.push(`"${bone}"`)
+    } else {
+        boneBuilder.push(bone)
+    }
+
+    boneBuilder.push(` by ${axis} curve ${bake ? 'linear' : VCA_INTERPS_MAP[interpType]} {\n`)
 
     let prevValue = null
     let fullyValuesEqual = true
@@ -174,7 +180,7 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
     boneBuilder.push('}')
     boneBuilder.push('\n\n')
 
-    builder.push(boneBuilder)
+    builder.push(...boneBuilder)
 }
 
 export default function doExport(options) {
