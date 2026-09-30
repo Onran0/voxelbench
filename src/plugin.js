@@ -191,6 +191,11 @@ Plugin.register('voxelbench', {
                             ])
                         ),
                         default: Animator.animations[0].uuid
+                    },
+                    bake: {
+                        type: 'checkbox',
+                        label: 'voxelbench.export.vca.bake_animation',
+                        value: false
                     }
                 }
             }, exportVca,

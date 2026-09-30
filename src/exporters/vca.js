@@ -57,20 +57,22 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
     const vcaChannel = VCA_CHANNELS_MAP[channel]
 
     let interpType
-    let bake = false
+    let bake = options.bake
 
-    keyframes.some(keyframe => {
-        let kfInterpType = keyframe.interpolation
+    if(!bake) {
+        keyframes.some(keyframe => {
+            let kfInterpType = keyframe.interpolation
 
-        if(interpType != null) {
-            if(kfInterpType !== interpType) {
-                // baking if animation have multiple interpolation types
-                // TODO: instead of baking convert step|linear|catmullrom interpolations to bezier
-                bake = true
-                return true
-            }
-        } else interpType = kfInterpType
-    })
+            if(interpType != null) {
+                if(kfInterpType !== interpType) {
+                    // baking if animation have multiple interpolation types
+                    // TODO: instead of baking convert step|linear|catmullrom interpolations to bezier
+                    bake = true
+                    return true
+                }
+            } else interpType = kfInterpType
+        })
+    }
 
     let boneBuilder = [ ]
 
