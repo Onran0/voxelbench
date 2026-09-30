@@ -101,7 +101,7 @@ function registerFormat(
 let actions = [ ]
 
 Plugin.register('voxelbench', {
-    title: 'VoxelBench',
+    title: 'Voxelbench',
     author: 'Onran',
     icon: pluginIcon,
     version: version,
