@@ -202,7 +202,18 @@ Plugin.register('voxelbench', {
 
         registerFormat(
             'VCM (Voxel Core Model)', 'vcm',
-            Object.assign(deepCopy(modelBaseOptions), { }), exportVcm,
+            Object.assign(deepCopy(modelBaseOptions), {
+                shading: {
+                    type: 'checkbox',
+                    label: 'voxelbench.export.vcm.shading',
+                    value: true,
+                },
+                cullFace: {
+                    type: 'checkbox',
+                    label: 'voxelbench.export.vcm.cull_face',
+                    value: true
+                }
+            }), exportVcm,
             'export_vcm', 'voxelbench.vcm.export'
         )
     },

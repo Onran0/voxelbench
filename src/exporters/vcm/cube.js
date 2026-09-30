@@ -31,6 +31,9 @@ export default function exportCube(element, builder, parentInfo, indent, options
     if(!avec3.is_zero(element.rotation))
         builder.push(`rotate (${prettyJoin([ q.x, q.y, q.z, q.w ], ', ')}) `)
 
+    if(!options.shading)
+        builder.push('shading off ')
+
     builder.push(`{\n`)
 
     for (let faceName in element.faces) {
