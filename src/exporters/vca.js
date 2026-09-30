@@ -9,6 +9,7 @@ const CHANNEL_SCALE = 'scale'
 const CHANNELS = [ CHANNEL_POSITION, CHANNEL_ROTATION, CHANNEL_SCALE ]
 
 import { prettify } from "../util/floats_prettifier"
+import catmullromToRelativeBezierControlPoints from "../util/catmullrom_to_bezier"
 
 const VCA_CHANNELS_MAP = {
     position: 'move',
@@ -35,7 +36,7 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
         let kfInterpType = keyframe.interpolation
 
         if(interpType != null) {
-            if(kfInterpType !== interpType || interpType === 'catmullrom') {
+            if(kfInterpType !== interpType) {
                 bake = true
                 return true
             }
@@ -86,6 +87,8 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
             builder.push(...kfsBuilder)
         }
     } else {
+        let kfIndex = 0
+
         for(const keyframe of keyframes) {
             const frame = Math.floor(keyframe.time * fps)
 
@@ -97,14 +100,27 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
 
             builder.push(`\t@key frame ${frame} value ${prettify(value)}`)
 
+            let lx, ly, rx, ry
+
             if(interpType === 'bezier') {
-                builder.push(` lx ${prettify(Math.floor(keyframe.bezier_left_time[axisIndex] || 0) * fps)}`)
-                builder.push(` ly ${prettify(keyframe.bezier_left_value[axisIndex] || 0)}`)
-                builder.push(` rx ${prettify(Math.floor(keyframe.bezier_right_time[axisIndex] || 0) * fps)}`)
-                builder.push(` ry ${prettify(keyframe.bezier_right_value[axisIndex] || 0)}`)
+                lx = Math.floor(keyframe.bezier_left_time[axisIndex] || 0) * fps
+                ly = keyframe.bezier_left_value[axisIndex] || 0
+                rx = Math.floor(keyframe.bezier_right_time[axisIndex] || 0) * fps
+                ry = keyframe.bezier_right_value[axisIndex] || 0
+            } else if(interpType === 'catmullrom') {
+                [ lx, ly, rx, ry ] = catmullromToRelativeBezierControlPoints(keyframe, kfIndex, axis)
+            }
+
+            if(interpType === 'bezier' || interpType === 'catmullrom') {
+                builder.push(` lx ${prettify(lx)}`)
+                builder.push(` ly ${prettify(ly)}`)
+                builder.push(` rx ${prettify(rx)}`)
+                builder.push(` ry ${prettify(ry)}`)
             }
 
             builder.push('\n')
+
+            kfIndex++
         }
     }
 
@@ -128,7 +144,7 @@ export default function doExport(options) {
 
             for(const channel of CHANNELS) {
                 if(animator[channel] && animator[channel].length > 0) {
-                    const keyframes = animator[channel]
+                    const keyframes = animator[channel].slice().sort((a, b) => (a.time - b.time))
 
                     const axesToExport = []
 
