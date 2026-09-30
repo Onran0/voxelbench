@@ -193,7 +193,7 @@ export default function doExport(options) {
     for(let textureName of textureNames) {
         textureName = textureName.length !== 0 ? texturesPrefix + textureName : missingTex
 
-        buffer.putUint16(0) // flags
+        buffer.putUint16(!options.shading ? 1 : 0) // flags
         buffer.putUint16(buffer.getBytesCountInUtf(textureName))
         buffer.putUtf(textureName)
     }

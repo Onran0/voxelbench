@@ -165,6 +165,11 @@ Plugin.register('voxelbench', {
                         type: 'checkbox',
                         label: 'voxelbench.export.vec3.export_normals',
                         value: true
+                    },
+                    shading: {
+                        type: 'checkbox',
+                        label: 'voxelbench.export.shading',
+                        value: true,
                     }
                 }
             ), exportVec3,
@@ -205,7 +210,7 @@ Plugin.register('voxelbench', {
             Object.assign(deepCopy(modelBaseOptions), {
                 shading: {
                     type: 'checkbox',
-                    label: 'voxelbench.export.vcm.shading',
+                    label: 'voxelbench.export.shading',
                     value: true,
                 },
                 cullFace: {
