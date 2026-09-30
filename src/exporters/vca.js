@@ -64,20 +64,25 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
 
         if(interpType != null) {
             if(kfInterpType !== interpType) {
+                // baking if animation have multiple interpolation types
+                // TODO: instead of baking convert step|linear|catmullrom interpolations to bezier
                 bake = true
                 return true
             }
         } else interpType = kfInterpType
     })
 
-    builder.push(`@${vcaChannel} bone "${bone}" by "${axis}" curve "${bake ? 'linear' : VCA_INTERPS_MAP[interpType]}" {\n`)
+    let boneBuilder = [ ]
+
+    boneBuilder.push(`@${vcaChannel} bone "${bone}" by ${axis} curve ${bake ? 'linear' : VCA_INTERPS_MAP[interpType]} {\n`)
+
+    let prevValue = null
+    let fullyValuesEqual = true
+
+    let kfsBuilder = [ ]
 
     if(bake) {
         let prevKfFrame = 0
-        let prevValue = null
-        let fullyValuesEqual = true
-
-        let kfsBuilder = [ ]
 
         for(const keyframe of keyframes) {
             let kfLastFrame = Math.floor(keyframe.time * fps)
@@ -107,12 +112,6 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
 
             prevKfFrame = kfLastFrame
         }
-
-        if(fullyValuesEqual) {
-            builder.push(`\t@key frame 0 value ${prettify(prevValue)}\n`)
-        } else {
-            builder.push(...kfsBuilder)
-        }
     } else {
         let kfIndex = 0
 
@@ -121,11 +120,18 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
 
             let value = keyframe.calc(axis)
 
+            if(prevValue != null) {
+                if(prevValue !== value)
+                    fullyValuesEqual = false
+            }
+
+            prevValue = value
+
             if(channel === CHANNEL_POSITION) {
                 value -= options.worldCenter[axisIndex]
             }
 
-            builder.push(`\t@key frame ${frame} value ${prettify(value)}`)
+            kfsBuilder.push(`\t@key frame ${frame} value ${prettify(value)}`)
 
             let lx, ly, rx, ry
 
@@ -139,20 +145,34 @@ function exportAxisKeyframes(builder, bone, channel, axis, keyframes, animator, 
             }
 
             if(interpType === 'bezier' || interpType === 'catmullrom') {
-                builder.push(` lx ${prettify(Math.floor(lx * fps))}`)
-                builder.push(` ly ${prettify(ly)}`)
-                builder.push(` rx ${prettify(Math.floor(rx * fps))}`)
-                builder.push(` ry ${prettify(ry)}`)
+                kfsBuilder.push(` lx ${prettify(Math.floor(lx * fps))}`)
+                kfsBuilder.push(` ly ${prettify(ly)}`)
+                kfsBuilder.push(` rx ${prettify(Math.floor(rx * fps))}`)
+                kfsBuilder.push(` ry ${prettify(ry)}`)
             }
 
-            builder.push('\n')
+            kfsBuilder.push('\n')
 
             kfIndex++
         }
     }
 
-    builder.push('}')
-    builder.push('\n\n')
+    if(fullyValuesEqual) {
+        if(prevValue === 0 && channel !== CHANNEL_SCALE) { // cuz scale is absolute
+            return
+        } else if(prevValue === 1 && channel === CHANNEL_SCALE) {
+            return
+        }
+
+        boneBuilder.push(`\t@key frame 0 value ${prettify(prevValue)}\n`)
+    } else {
+        boneBuilder.push(...kfsBuilder)
+    }
+
+    boneBuilder.push('}')
+    boneBuilder.push('\n\n')
+
+    builder.push(boneBuilder)
 }
 
 export default function doExport(options) {
